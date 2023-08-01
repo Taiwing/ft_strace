@@ -39,10 +39,7 @@ static void	usage(int status)
 
 	printf("Usage:\n");
 	while (*usage)
-	{
-		printf("\t%s %s\n", program_invocation_name, *usage);
-		++usage;
-	}
+		printf("\t%s %s\n", program_invocation_name, *usage++);
 	printf("\nOptions:\n");
 	while (options->name && *help)
 	{
