@@ -4,7 +4,7 @@
 #include <getopt.h>
 
 // ft_strace short options
-#define FT_ST_OPTS	"cChp:"
+#define FT_ST_OPTS	"+cChp:"
 
 const struct option		g_st_options[] = {
 	{	"summary-only",		no_argument,		NULL,	'c'	},
