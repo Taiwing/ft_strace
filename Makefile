@@ -11,6 +11,7 @@ NAME		=	ft_strace
 ############################## SOURCES #########################################
 
 SRCC			=	main.c\
+					options.c\
 
 ODIR			=	obj
 OBJ				=	$(patsubst %.c,%.o,$(SRCC))
@@ -27,6 +28,7 @@ $(NAME): $(ODIR) $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $(patsubst %.o,$(ODIR)/%.o,$(OBJ))
 
 main.o: ft_strace.h
+options.o: ft_strace.h
 %.o: %.c
 	@mkdir -p $(ODIR)
 	$(CC) -c $(CFLAGS) $< $(HFLAGS) -o $(ODIR)/$@

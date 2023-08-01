@@ -2,12 +2,18 @@
 
 int	main(int argc, char **argv)
 {
-	if (argc < 2)
-		error(EXIT_FAILURE, 0, "must have PROG [ARGS] or -p PID\n"
+	t_st_config	cfg = { 0 };
+	char		**args = parse_arguments(&cfg, argc, argv);
+
+	if (!*args && !cfg.pid_list)
+		error(EXIT_FAILURE, 0, "must have 'command [args]' or '-p pid'\n"
 			"Try '%s -h' for more information.", program_invocation_name);
-	printf("%s", *++argv);
-	while (*++argv)
-		printf(" %s", *argv);
-	putchar('\n');
+	if (*args)
+	{
+		printf("%s", *args++);
+		while (*args)
+			printf(" %s", *args++);
+		putchar('\n');
+	}
 	return (EXIT_SUCCESS);
 }
