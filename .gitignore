@@ -1,0 +1,5 @@
+ft_strace
+obj/
+*.swo
+*.swn
+*.swp
