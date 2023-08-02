@@ -59,7 +59,7 @@ static void	usage(int status)
 	exit(status);
 }
 
-char	**parse_arguments(t_st_config *cfg,  int argc, char **argv)
+char	**parse_options(t_st_config *cfg,  int argc, char **argv)
 {
 	int	c;
 
@@ -68,7 +68,9 @@ char	**parse_arguments(t_st_config *cfg,  int argc, char **argv)
 		{
 			case 'c': cfg->hide_output = cfg->summary = 1;				break;
 			case 'C': cfg->hide_output = 0; cfg->summary = 1;			break;
-			case 'p': cfg->pid_list = optarg;							break;
+			case 'p':
+				cfg->pid_table_size = parse_pid_list(&cfg->pid_table, optarg);
+																		break;
 			default: usage(c != 'h');									break;
 		}
 	return (argv + optind);
