@@ -8,6 +8,7 @@ int	main(int argc, char **argv)
 	if (!*args && !cfg.pid_list)
 		error(EXIT_FAILURE, 0, "must have 'command [args]' or '-p pid'\n"
 			"Try '%s -h' for more information.", program_invocation_name);
+	//TODO: parse pid_list with strtok(pid_list, ", ") (or strsep() more likely)
 	if (*args)
 	{
 		printf("%s", *args++);

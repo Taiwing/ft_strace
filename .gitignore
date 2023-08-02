@@ -3,3 +3,4 @@ obj/
 *.swo
 *.swn
 *.swp
+tests/
