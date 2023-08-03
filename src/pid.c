@@ -21,7 +21,7 @@ size_t	parse_pid_list(pid_t **dest, char *pid_argument)
 		(*dest)[--size] = pid;
 	}
 	else if (!(*dest = malloc(size * sizeof(pid_t))))
-		error(EXIT_FAILURE, errno, __func__);
+		err(EXIT_FAILURE, __func__);
 	else
 		ret = size;
 	return (ret);

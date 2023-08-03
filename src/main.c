@@ -10,8 +10,10 @@ static void	config_cleanup(void)
 
 int	main(int argc, char **argv)
 {
-	char		**args = parse_options(&g_cfg, argc, argv);
+	char		**args = NULL;
 
+	program_invocation_name = program_invocation_short_name;
+	args = parse_options(&g_cfg, argc, argv);
 	if (atexit(config_cleanup))
 		error(EXIT_FAILURE, 0, "cannot set exit function");
 	if (!*args && !g_cfg.pid_table)
@@ -24,10 +26,19 @@ int	main(int argc, char **argv)
 	}
 	if (*args)
 	{
-		printf("%s", *args++);
-		while (*args)
-			printf(" %s", *args++);
-		putchar('\n');
+		char	*command = find_command(*args);
+
+		if (!command)
+			exit(EXIT_FAILURE);
+		if (execvp(command, args) < 0)
+		{
+			free(command);
+			err(EXIT_FAILURE, "'%s'", *args);
+		}
+		//printf("%s", *args++);
+		//while (*args)
+		//	printf(" %s", *args++);
+		//putchar('\n');
 	}
 	return (EXIT_SUCCESS);
 }

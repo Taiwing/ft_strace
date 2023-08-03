@@ -1,6 +1,5 @@
 #include "ft_strace.h"
 #include <ctype.h>
-#include <unistd.h>
 #include <getopt.h>
 
 // ft_strace short options

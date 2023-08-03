@@ -12,6 +12,7 @@ NAME		=	ft_strace
 
 SRCC			=	main.c\
 					pid.c\
+					find_command.c\
 					options.c\
 
 ODIR			=	obj
@@ -30,6 +31,7 @@ $(NAME): $(ODIR) $(OBJ)
 
 main.o: ft_strace.h
 pid.o: ft_strace.h
+find_command.o: ft_strace.h
 options.o: ft_strace.h
 %.o: %.c
 	@mkdir -p $(ODIR)

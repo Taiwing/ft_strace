@@ -2,10 +2,12 @@
 
 #define _GNU_SOURCE
 
+#include <err.h>
 #include <errno.h>
 #include <error.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 /*
 ** ft_strace global configuration
@@ -23,3 +25,4 @@ typedef struct	s_st_config
 */
 size_t			parse_pid_list(pid_t **dest, char *pid_argument);
 char			**parse_options(t_st_config *cfg,  int argc, char **argv);
+char			*find_command(char *cmd_name);
