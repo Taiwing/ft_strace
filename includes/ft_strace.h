@@ -26,4 +26,4 @@ typedef struct	s_st_config
 size_t			parse_pid_list(pid_t **dest, char *pid_argument);
 char			**parse_options(t_st_config *cfg,  int argc, char **argv);
 char			*find_command(char *cmd_name);
-void			execute_command(char *command, char **argv);
+pid_t			execute_command(char *command, char **argv);

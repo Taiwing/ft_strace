@@ -14,38 +14,19 @@ static void	trace_child(pid_t pid)
 		kill(pid, SIGKILL);
 		error(EXIT_FAILURE, 0, "child did not stop");
 	}
-	printf("parent pid = %d\n", getpid());
 
 	// Trace the child.
 	if (ptrace(PTRACE_SEIZE, pid, NULL, NULL) < 0)
 		err(EXIT_FAILURE, "ptrace");
-	if (ptrace(PTRACE_SYSCALL, pid, NULL, NULL) < 0)
-		err(EXIT_FAILURE, "ptrace");
 
 	// Resume child execution.
-	if (kill(pid, SIGCONT) < 0)
-		err(EXIT_FAILURE, "kill");
-
-	//TODO: this hardcoded part is probably useless, make a generic version
-	// of the following code into a function that will be used both for this
-	// child process and for attached processes.
-
-	// Wait for the child to stop at the next system call (execve).
-	while (waitpid(pid, &status, WUNTRACED) < 0)
-		if (errno != EINTR)
-			err(EXIT_FAILURE, "waitpid");
-	if (!WIFSTOPPED(status) || WSTOPSIG(status) != SIGTRAP) {
-		kill(pid, SIGKILL);
-		error(EXIT_FAILURE, 0, "child did not stop at execve()");
-	}
+	if (ptrace(PTRACE_SYSCALL, pid, NULL, NULL) < 0)
+		err(EXIT_FAILURE, "ptrace");
 }
 
 __attribute__((noreturn))
 static void	child_process(char *command, char **argv)
 {
-	printf("child pid = %d\n", getpid());
-	printf("toto\n");
-
 	// Stop the child process so that the parent can trace it.
 	if (raise(SIGSTOP))
 	{
@@ -61,7 +42,7 @@ static void	child_process(char *command, char **argv)
 	err(EXIT_FAILURE, "'%s'", *argv);
 }
 
-void		execute_command(char *command, char **argv)
+pid_t		execute_command(char *command, char **argv)
 {
 	pid_t	pid = fork();
 
@@ -77,4 +58,5 @@ void		execute_command(char *command, char **argv)
 		free(command);
 		trace_child(pid);
 	}
+	return (pid);
 }
