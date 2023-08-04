@@ -1,4 +1,6 @@
 #include "ft_strace.h"
+#include <sys/wait.h>
+#include <sys/ptrace.h>
 
 t_st_config	g_cfg = { 0 };
 
@@ -26,14 +28,59 @@ int	main(int argc, char **argv)
 	}
 	if (*args)
 	{
+		pid_t	pid;
 		char	*command = find_command(*args);
 
 		if (!command)
 			exit(EXIT_FAILURE);
-		if (execvp(command, args) < 0)
+
+		pid = fork();
+		switch (pid)
 		{
-			free(command);
-			err(EXIT_FAILURE, "'%s'", *args);
+			case -1:
+				free(command);
+				err(EXIT_FAILURE, "fork");
+			case 0:
+				printf("child pid = %d\n", getpid());
+				printf("toto\n");
+				if (raise(SIGSTOP))
+				{
+					free(command);
+					err(EXIT_FAILURE, "raise");
+				}
+				if (execvp(command, args) < 0)
+				{
+					free(command);
+					err(EXIT_FAILURE, "'%s'", *args);
+				}
+				break;
+			default:
+				free(command);
+				int status;
+				while (waitpid(pid, &status, WUNTRACED) < 0) {
+					if (errno != EINTR)
+						err(EXIT_FAILURE, "waitpid");
+				}
+				if (!WIFSTOPPED(status) || WSTOPSIG(status) != SIGSTOP) {
+					kill(pid, SIGKILL);
+					err(EXIT_FAILURE, "child did not stop");
+				}
+				printf("parent pid = %d\n", getpid());
+				if (ptrace(PTRACE_SEIZE, pid, NULL, NULL) < 0)
+					err(EXIT_FAILURE, "ptrace");
+				if (ptrace(PTRACE_SYSCALL, pid, NULL, NULL) < 0)
+					err(EXIT_FAILURE, "ptrace");
+				if (kill(pid, SIGCONT) < 0)
+					err(EXIT_FAILURE, "kill");
+				while (waitpid(pid, &status, WUNTRACED) < 0) {
+					if (errno != EINTR)
+						err(EXIT_FAILURE, "waitpid");
+				}
+				if (!WIFSTOPPED(status) || WSTOPSIG(status) != SIGTRAP) {
+					kill(pid, SIGKILL);
+					err(EXIT_FAILURE, "child did not stop at execve()");
+				}
+				exit(EXIT_SUCCESS);
 		}
 		//printf("%s", *args++);
 		//while (*args)
