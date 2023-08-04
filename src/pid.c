@@ -1,6 +1,39 @@
 #include "ft_strace.h"
 #include <string.h>
 
+int		trace_process(pid_t pid)
+{
+	int	status;
+
+	// Seize running process.
+	if (ptrace(PTRACE_SEIZE, pid, NULL, NULL) < 0)
+	{
+		if (errno == ESRCH || errno == EPERM)
+		{
+			warn("ptrace");
+			return (-1);
+		}
+		err(EXIT_FAILURE, "ptrace");
+	}
+
+	// Interrupt process.
+	if (ptrace(PTRACE_INTERRUPT, pid, NULL, NULL) < 0)
+		err(EXIT_FAILURE, "ptrace");
+
+	// Wait for the process to stop.
+	while (waitpid(pid, &status, WUNTRACED) < 0)
+		if (errno != EINTR)
+			err(EXIT_FAILURE, "waitpid");
+	if (!WIFSTOPPED(status))
+		error(EXIT_FAILURE, 0, "process did not stop");
+
+	// Trace the process.
+	if (ptrace(PTRACE_SYSCALL, pid, NULL, NULL) < 0)
+		err(EXIT_FAILURE, "ptrace");
+
+	return (0);
+}
+
 size_t	parse_pid_list(pid_t **dest, char *pid_argument)
 {
 	static size_t	size = 0;

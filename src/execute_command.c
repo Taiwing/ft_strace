@@ -1,6 +1,4 @@
 #include "ft_strace.h"
-#include <sys/wait.h>
-#include <sys/ptrace.h>
 
 static void	trace_child(pid_t pid)
 {

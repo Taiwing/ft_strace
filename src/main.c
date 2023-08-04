@@ -1,6 +1,4 @@
 #include "ft_strace.h"
-#include <sys/wait.h>
-#include <sys/ptrace.h>
 
 t_st_config	g_cfg = { 0 };
 
@@ -25,23 +23,26 @@ int	main(int argc, char **argv)
 	if (g_cfg.pid_table)
 	{
 		for (size_t i = 0; i < g_cfg.pid_table_size; ++i)
-			printf("pid_table[%zu] = %d\n", i, g_cfg.pid_table[i]);
+			if (!trace_process(g_cfg.pid_table[i]))
+				++g_cfg.process_count;
 	}
 
 	if (*args)
 	{
-		pid_t	command_pid;
 		char	*command = find_command(*args);
 
-		if (!command)
+		if (!command && !g_cfg.process_count)
 			exit(EXIT_FAILURE);
-		command_pid = execute_command(command, args);
-		printf("command_pid = %d\n", command_pid);
+		else if (command)
+		{
+			execute_command(command, args);
+			++g_cfg.process_count;
+		}
 	}
 
-	int		status;
+	int		status = -1;
 	pid_t	pid;
-	do
+	while (g_cfg.process_count)
 	{
 		if ((pid = waitpid(-1, &status, __WALL)) < 0)
 		{
@@ -50,18 +51,22 @@ int	main(int argc, char **argv)
 			err(EXIT_FAILURE, "waitpid");
 		}
 
+		printf("[%d] ", pid);
 		if (WIFEXITED(status)) {
 			printf("exited, status=%d\n", WEXITSTATUS(status));
+			--g_cfg.process_count;
 		} else if (WIFSIGNALED(status)) {
 			printf("killed by signal %d\n", WTERMSIG(status));
+			--g_cfg.process_count;
 		} else if (WIFSTOPPED(status)) {
 			printf("stopped by signal %d\n", WSTOPSIG(status));
-			if (ptrace(PTRACE_SYSCALL, pid, NULL, NULL) < 0)
+			if (WSTOPSIG(status) == SIGTRAP
+				&& ptrace(PTRACE_SYSCALL, pid, NULL, NULL) < 0)
 				err(EXIT_FAILURE, "ptrace");
 		} else if (WIFCONTINUED(status)) {
 			printf("continued\n");
 		}
-	} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+	}
 
 	return (EXIT_SUCCESS);
 }
