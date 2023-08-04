@@ -40,7 +40,8 @@ static void	trace_child(pid_t pid)
 	}
 }
 
-__attribute__((noreturn)) static void	child_process(char *command, char **argv)
+__attribute__((noreturn))
+static void	child_process(char *command, char **argv)
 {
 	printf("child pid = %d\n", getpid());
 	printf("toto\n");
