@@ -27,7 +27,12 @@ int		trace_process(pid_t pid)
 	if (!WIFSTOPPED(status))
 		error(EXIT_FAILURE, 0, "process did not stop");
 
-	// Trace the process.
+	// Set PTRACE_O_TRACESYSGOOD so that we can distinguish between
+	// a syscall induced event and a normal SIGTRAP.
+	if (ptrace(PTRACE_SETOPTIONS, pid, NULL, PTRACE_O_TRACESYSGOOD) < 0)
+		err(EXIT_FAILURE, "ptrace");
+
+	// Trace the process and resume execution.
 	if (ptrace(PTRACE_SYSCALL, pid, NULL, NULL) < 0)
 		err(EXIT_FAILURE, "ptrace");
 

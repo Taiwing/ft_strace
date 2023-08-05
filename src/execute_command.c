@@ -17,6 +17,11 @@ static void	trace_child(pid_t pid)
 	if (ptrace(PTRACE_SEIZE, pid, NULL, NULL) < 0)
 		err(EXIT_FAILURE, "ptrace");
 
+	// Set PTRACE_O_TRACESYSGOOD so that we can distinguish between
+	// a syscall induced event and a normal SIGTRAP.
+	if (ptrace(PTRACE_SETOPTIONS, pid, NULL, PTRACE_O_TRACESYSGOOD) < 0)
+		err(EXIT_FAILURE, "ptrace");
+
 	// Resume child execution.
 	if (ptrace(PTRACE_SYSCALL, pid, NULL, NULL) < 0)
 		err(EXIT_FAILURE, "ptrace");

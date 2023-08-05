@@ -60,7 +60,7 @@ int	main(int argc, char **argv)
 			--g_cfg.process_count;
 		} else if (WIFSTOPPED(status)) {
 			printf("stopped by signal %d\n", WSTOPSIG(status));
-			if (WSTOPSIG(status) == SIGTRAP
+			if (WSTOPSIG(status) == (SIGTRAP | 0x80)
 				&& ptrace(PTRACE_SYSCALL, pid, NULL, NULL) < 0)
 				err(EXIT_FAILURE, "ptrace");
 		} else if (WIFCONTINUED(status)) {
