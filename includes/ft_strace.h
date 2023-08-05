@@ -31,3 +31,4 @@ char			**parse_options(t_st_config *cfg,  int argc, char **argv);
 char			*find_command(char *cmd_name);
 pid_t			execute_command(char *command, char **argv);
 int				trace_process(pid_t pid);
+void			process_event_loop(t_st_config *cfg);
