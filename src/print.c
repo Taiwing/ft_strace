@@ -1,5 +1,6 @@
 #include "ft_strace.h"
 #include <string.h>
+#include <signal.h>
 
 char	*signame(int sig)
 {

@@ -6,8 +6,9 @@ static void	print_signal(t_st_config *cfg,
 	//TODO: print each signal differently as per the original strace
 	if (!stopped && si)
 		stprintf(cfg,
-			"--- %s {si_signo=%d, si_code=%d, si_pid=%d, si_uid=%d} ---\n",
-			signame(sig), si->si_signo, si->si_code, si->si_pid, si->si_uid);
+			"--- %s {si_signo=%s, si_code=%d, si_pid=%d, si_uid=%d} ---\n",
+			signame(sig), signame(si->si_signo), si->si_code,
+			si->si_pid, si->si_uid);
 	else
 		stprintf(cfg, "--- stopped by %s ---\n", signame(sig));
 }
