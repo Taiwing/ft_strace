@@ -22,7 +22,6 @@ typedef struct	s_st_config
 	pid_t		*pid_table;			// pids of processes to attach (-p)
 	size_t		pid_table_size;		// count of processes to attach (-p)
 	size_t		process_count;		// count of processes currently attached
-	FILE		*output;			// output file
 	pid_t		current_pid;		// pid of the current event's process
 }				t_st_config;
 
@@ -35,4 +34,4 @@ char			*find_command(char *cmd_name);
 pid_t			execute_command(char *command, char **argv);
 int				trace_process(pid_t pid);
 void			process_event_loop(t_st_config *cfg);
-int				ft_strace_printf(t_st_config *cfg, const char *format, ...);
+int				stprintf(t_st_config *cfg, const char *format, ...);

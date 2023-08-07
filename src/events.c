@@ -2,14 +2,14 @@
 #include <string.h>
 
 static void	print_signal(t_st_config *cfg,
-	unsigned int sig, unsigned int stopped)
+	unsigned int sig, unsigned int stopped, siginfo_t *siginfo)
 {
 	//TODO: pass siginfo_t to print more info about signals
-	if (!stopped)
-		ft_strace_printf(cfg, "--- SIG%s [TODO: more info] ---\n",
+	if (!stopped && siginfo)
+		stprintf(cfg, "--- SIG%s [TODO: more info] ---\n",
 			sigabbrev_np(sig));
 	else
-		ft_strace_printf(cfg, "--- stopped by SIG%s ---\n", sigabbrev_np(sig));
+		stprintf(cfg, "--- stopped by SIG%s ---\n", sigabbrev_np(sig));
 }
 
 static void	handle_stopped_process(t_st_config *cfg, int status)
@@ -19,20 +19,20 @@ static void	handle_stopped_process(t_st_config *cfg, int status)
 					event = (unsigned int)status >> 16;
 
 	if (sig == (SIGTRAP | 0x80)) {
-		ft_strace_printf(cfg, "syscall() = ?\n"); //TEMP
+		stprintf(cfg, "syscall() = ?\n"); //TEMP
 		sig = 0;
 	} else if (event) {
 		if (event == PTRACE_EVENT_STOP && (sig == SIGSTOP || sig == SIGTSTP
 			|| sig == SIGTTIN || sig == SIGTTOU))
 		{
 			stopped = 1;
-			print_signal(cfg, sig, stopped);
+			print_signal(cfg, sig, stopped, NULL);
 		} else {
 			sig = 0;
 		}
 	} else {
 		stopped = (ptrace(PTRACE_GETSIGINFO, cfg->current_pid, NULL, &siginfo) < 0);
-		print_signal(cfg, sig, stopped);
+		print_signal(cfg, sig, stopped, stopped ? NULL : &siginfo);
 	}
 
 	if (stopped && ptrace(PTRACE_LISTEN, cfg->current_pid, NULL, NULL) < 0)
@@ -55,11 +55,11 @@ void	process_event_loop(t_st_config *cfg)
 		}
 
 		if (WIFEXITED(status)) {
-			ft_strace_printf(cfg, "+++ exited with %d +++\n",
+			stprintf(cfg, "+++ exited with %d +++\n",
 				WEXITSTATUS(status));
 			--cfg->process_count;
 		} else if (WIFSIGNALED(status)) {
-			ft_strace_printf(cfg, "+++ killed by SIG%s +++\n",
+			stprintf(cfg, "+++ killed by SIG%s +++\n",
 				sigabbrev_np(WTERMSIG(status)));
 			--cfg->process_count;
 		} else if (!WIFSTOPPED(status)) {

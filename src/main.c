@@ -29,7 +29,6 @@ int	main(int argc, char **argv)
 {
 	char		**args = NULL;
 
-	g_cfg.output = stderr;
 	program_invocation_name = program_invocation_short_name;
 	args = parse_options(&g_cfg, argc, argv);
 	if (atexit(config_cleanup))
