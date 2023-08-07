@@ -39,16 +39,14 @@ static int	find_file_path(char **dest, char *path, char *cmd_name)
 		}
 		free(fp);
 	}
-	fprintf(stderr, "%s: '%s': command not found\n",
-		program_invocation_name, cmd_name);
+	warnx("'%s': command not found", cmd_name);
 	return (0);
 }
 
 static int	access_test(char *cmd_name)
 {
 	if (access(cmd_name, F_OK))
-		fprintf(stderr, "%s: '%s': command not found\n",
-			program_invocation_name, cmd_name);
+		warnx("'%s': command not found", cmd_name);
 	else if (access(cmd_name, X_OK) == -1)
 		warn("'%s'", cmd_name);
 	else

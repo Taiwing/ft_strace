@@ -43,7 +43,10 @@ int	main(int argc, char **argv)
 	{
 		for (size_t i = 0; i < g_cfg.pid_table_size; ++i)
 			if (!trace_process(g_cfg.pid_table[i]))
+			{
+				warnx("Process %u attached", g_cfg.pid_table[i]);
 				++g_cfg.process_count;
+			}
 	}
 
 	if (*args)
