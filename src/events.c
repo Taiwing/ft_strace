@@ -3,12 +3,20 @@
 static void	print_signal(t_st_config *cfg,
 	unsigned int sig, unsigned int stopped, siginfo_t *si)
 {
-	//TODO: print each signal differently as per the original strace
 	if (!stopped && si)
-		stprintf(cfg,
-			"--- %s {si_signo=%s, si_code=%d, si_pid=%d, si_uid=%d} ---\n",
-			signame(sig), signame(si->si_signo), si->si_code,
-			si->si_pid, si->si_uid);
+	{
+		if (si->si_code == SI_USER)
+			stprintf(cfg, "--- %s {si_signo=%s, si_code=SI_USER, si_pid=%d,"
+				" si_uid=%d} ---\n", signame(sig), signame(si->si_signo),
+				si->si_pid, si->si_uid);
+		else if (si->si_code == SI_KERNEL)
+			stprintf(cfg, "--- %s {si_signo=%s, si_code=SI_KERNEL} ---\n",
+				signame(sig), signame(si->si_signo));
+		else
+			stprintf(cfg, "--- %s {si_signo=%s, si_code=%d, si_pid=%d,"
+				" si_uid=%d} ---\n", signame(sig), signame(si->si_signo),
+				si->si_code, si->si_pid, si->si_uid);
+	}
 	else
 		stprintf(cfg, "--- stopped by %s ---\n", signame(sig));
 }
