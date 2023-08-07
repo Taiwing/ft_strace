@@ -11,6 +11,7 @@ NAME		=	ft_strace
 ############################## SOURCES #########################################
 
 SRCC			=	main.c\
+					print.c\
 					pid.c\
 					events.c\
 					execute_command.c\
@@ -32,6 +33,7 @@ $(NAME): $(ODIR) $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $(patsubst %.o,$(ODIR)/%.o,$(OBJ))
 
 main.o: ft_strace.h
+print.o: ft_strace.h
 pid.o: ft_strace.h
 events.o: ft_strace.h
 execute_command.o: ft_strace.h
