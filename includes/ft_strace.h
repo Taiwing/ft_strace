@@ -34,4 +34,5 @@ char			*find_command(char *cmd_name);
 pid_t			execute_command(char *command, char **argv);
 int				trace_process(pid_t pid);
 void			process_event_loop(t_st_config *cfg);
+char			*signame(int sig);
 int				stprintf(t_st_config *cfg, const char *format, ...);

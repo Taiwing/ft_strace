@@ -1,15 +1,15 @@
 #include "ft_strace.h"
-#include <string.h>
 
 static void	print_signal(t_st_config *cfg,
-	unsigned int sig, unsigned int stopped, siginfo_t *siginfo)
+	unsigned int sig, unsigned int stopped, siginfo_t *si)
 {
-	//TODO: pass siginfo_t to print more info about signals
-	if (!stopped && siginfo)
-		stprintf(cfg, "--- SIG%s [TODO: more info] ---\n",
-			sigabbrev_np(sig));
+	//TODO: print each signal differently as per the original strace
+	if (!stopped && si)
+		stprintf(cfg,
+			"--- %s {si_signo=%d, si_code=%d, si_pid=%d, si_uid=%d} ---\n",
+			signame(sig), si->si_signo, si->si_code, si->si_pid, si->si_uid);
 	else
-		stprintf(cfg, "--- stopped by SIG%s ---\n", sigabbrev_np(sig));
+		stprintf(cfg, "--- stopped by %s ---\n", signame(sig));
 }
 
 static void	handle_stopped_process(t_st_config *cfg, int status)
@@ -59,8 +59,7 @@ void	process_event_loop(t_st_config *cfg)
 				WEXITSTATUS(status));
 			--cfg->process_count;
 		} else if (WIFSIGNALED(status)) {
-			stprintf(cfg, "+++ killed by SIG%s +++\n",
-				sigabbrev_np(WTERMSIG(status)));
+			stprintf(cfg, "+++ killed by %s +++\n", signame(WTERMSIG(status)));
 			--cfg->process_count;
 		} else if (!WIFSTOPPED(status)) {
 			error(0, 0, "waitpid: unknown status %x", status);
