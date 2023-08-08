@@ -12,23 +12,25 @@
 #include <sys/wait.h>
 #include <sys/ptrace.h>
 
+#define PID_COUNT_MAX 1024
+
 /*
 ** ft_strace global configuration
 */
 typedef struct	s_st_config
 {
-	int			summary;			// -c and -C print summary
-	int			hide_output;		// -c hides regular output
-	pid_t		*pid_table;			// pids of processes to attach (-p)
-	size_t		pid_table_size;		// count of processes to attach (-p)
-	size_t		process_count;		// count of processes currently attached
-	pid_t		current_pid;		// pid of the current event's process
+	int			summary;						// -c and -C print summary
+	int			hide_output;					// -c hides regular output
+	pid_t		process_table[PID_COUNT_MAX];	// traced processes table
+	size_t		process_table_size;				// traced processes count
+	size_t		process_count;					// currently attached processes
+	pid_t		current_process;				// current event's process
 }				t_st_config;
 
 /*
 ** functions
 */
-size_t			parse_pid_list(pid_t **dest, char *pid_argument);
+size_t			parse_pid_list(pid_t *dest, char *pid_argument);
 char			**parse_options(t_st_config *cfg,  int argc, char **argv);
 char			*find_command(char *cmd_name);
 pid_t			execute_command(char *command, char **argv);

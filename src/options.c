@@ -67,9 +67,8 @@ char	**parse_options(t_st_config *cfg,  int argc, char **argv)
 		{
 			case 'c': cfg->hide_output = cfg->summary = 1;				break;
 			case 'C': cfg->hide_output = 0; cfg->summary = 1;			break;
-			case 'p':
-				cfg->pid_table_size = parse_pid_list(&cfg->pid_table, optarg);
-																		break;
+			case 'p': cfg->process_table_size =
+				parse_pid_list(cfg->process_table, optarg);				break;
 			default: usage(c != 'h');									break;
 		}
 	return (argv + optind);
