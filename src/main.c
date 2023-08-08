@@ -20,34 +20,30 @@ void	set_signals(void)
 int	main(int argc, char **argv)
 {
 	t_st_config	cfg = {0};
-	char		**args = NULL;
+	char		**args = NULL, *command;
 
 	program_invocation_name = program_invocation_short_name;
 	args = parse_options(&cfg, argc, argv);
 	if (!*args && !cfg.process_table_size)
-		error(EXIT_FAILURE, 0, "must have 'command [args]' or '-p pid'\n"
+		errx(EXIT_FAILURE, "must have 'command [args]' or '-p pid'\n"
 			"Try '%s -h' for more information.", program_invocation_name);
 	set_signals();
 
-	if (cfg.process_table_size)
-	{
-		for (size_t i = 0; i < cfg.process_table_size; ++i)
-			if (!trace_process(cfg.process_table[i]))
-			{
-				warnx("Process %u attached", cfg.process_table[i]);
-				++cfg.process_count;
-			}
-	}
+	for (size_t i = 0; i < cfg.process_table_size; ++i)
+		if (!trace_process(cfg.process_table[i]))
+		{
+			warnx("Process %u attached", cfg.process_table[i]);
+			++cfg.process_count;
+		}
 
 	if (*args)
 	{
-		char	*command = find_command(*args);
-
-		if (!command && !cfg.process_count)
-			exit(EXIT_FAILURE);
-		else if (command)
+		if (cfg.process_table_size == MAX_PROCESS)
+			errx(EXIT_FAILURE, "too many processes (max %d)", MAX_PROCESS);
+		else if ((command = find_command(*args)))
 		{
-			execute_command(command, args);
+			cfg.process_table[cfg.process_table_size++] =
+				execute_command(command, args);
 			++cfg.process_count;
 		}
 	}

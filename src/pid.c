@@ -49,7 +49,7 @@ size_t	parse_pid_list(pid_t *dest, char *pid_argument)
 		error(EXIT_FAILURE, EINVAL, __func__);
 	for (tok = strtok(pid_argument, ", "); tok; tok = strtok(NULL, ", "))
 	{
-		if (size == PID_COUNT_MAX)
+		if (size == MAX_PROCESS)
 			error(EXIT_FAILURE, E2BIG, "%s", __func__);
 		errno = 0;
 		pid = (pid_t)strtol(tok, &tail, 0);

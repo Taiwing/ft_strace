@@ -12,7 +12,7 @@
 #include <sys/wait.h>
 #include <sys/ptrace.h>
 
-#define PID_COUNT_MAX 1024
+#define MAX_PROCESS 1024
 
 /*
 ** ft_strace global configuration
@@ -21,7 +21,7 @@ typedef struct	s_st_config
 {
 	int			summary;						// -c and -C print summary
 	int			hide_output;					// -c hides regular output
-	pid_t		process_table[PID_COUNT_MAX];	// traced processes table
+	pid_t		process_table[MAX_PROCESS];		// traced processes table
 	size_t		process_table_size;				// traced processes count
 	size_t		process_count;					// currently attached processes
 	pid_t		current_process;				// current event's process
