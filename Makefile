@@ -12,6 +12,7 @@ NAME		=	ft_strace
 
 SRCC			=	syscall.c\
 					main.c\
+					syscall_tables.c\
 					print.c\
 					pid.c\
 					events.c\
@@ -35,6 +36,7 @@ $(NAME): $(ODIR) $(OBJ)
 
 syscall.o: ft_strace.h syscall.h
 main.o: ft_strace.h
+syscall_tables.o: syscall.h
 print.o: ft_strace.h
 pid.o: ft_strace.h
 events.o: ft_strace.h

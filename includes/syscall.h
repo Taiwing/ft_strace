@@ -3,6 +3,24 @@
 #include <stdint.h>
 
 /*
+** Syscall
+*/
+typedef struct	s_syscall
+{
+	int			nargs;
+	char		*name;
+}				t_syscall;
+
+// Syscall tables
+extern t_syscall		g_syscall_32[];
+extern t_syscall		g_syscall_64[];
+
+// Syscall limits
+#define SYSCALL_ARG_MAX	6
+#define SYSCALL_32_MAX	sizeof(g_syscall_32) / sizeof(t_syscall)
+#define SYSCALL_64_MAX	sizeof(g_syscall_64) / sizeof(t_syscall)
+
+/*
 ** Register structure for 32-bit processes
 */
 typedef struct	s_user_regs_32

@@ -5,58 +5,44 @@
 
 static void	print_syscall_32(t_st_config *cfg, t_user_regs_32 *regs)
 {
-	stprintf(cfg, "{");
-	stprintf(NULL, " ebx = %#x,", regs->ebx);
-	stprintf(NULL, " ecx = %#x,", regs->ecx);
-	stprintf(NULL, " edx = %#x,", regs->edx);
-	stprintf(NULL, " esi = %#x,", regs->esi);
-	stprintf(NULL, " edi = %#x,", regs->edi);
-	stprintf(NULL, " ebp = %#x,", regs->ebp);
-	stprintf(NULL, " eax = %#x,", regs->eax);
-	stprintf(NULL, " xds = %#x,", regs->xds);
-	stprintf(NULL, " xes = %#x,", regs->xes);
-	stprintf(NULL, " xfs = %#x,", regs->xfs);
-	stprintf(NULL, " xgs = %#x,", regs->xgs);
-	stprintf(NULL, " orig_eax = %#x,", regs->orig_eax);
-	stprintf(NULL, " eip = %#x,", regs->eip);
-	stprintf(NULL, " xcs = %#x,", regs->xcs);
-	stprintf(NULL, " eflags = %#x,", regs->eflags);
-	stprintf(NULL, " esp = %#x,", regs->esp);
-	stprintf(NULL, " xss = %#x ", regs->xss);
-	stprintf(NULL, "}\n");
+	if (g_syscall_32[regs->orig_eax].name == NULL)
+		stprintf(cfg, "unknown_syscall_%d(", regs->orig_eax);
+	else
+		stprintf(cfg, "%s(", g_syscall_32[regs->orig_eax].name);
+	if (g_syscall_32[regs->orig_eax].nargs > 0)
+		stprintf(NULL, "%#x", regs->ebx);
+	if (g_syscall_32[regs->orig_eax].nargs > 1)
+		stprintf(NULL, ", %#x", regs->ecx);
+	if (g_syscall_32[regs->orig_eax].nargs > 2)
+		stprintf(NULL, ", %#x", regs->edx);
+	if (g_syscall_32[regs->orig_eax].nargs > 3)
+		stprintf(NULL, ", %#x", regs->esi);
+	if (g_syscall_32[regs->orig_eax].nargs > 4)
+		stprintf(NULL, ", %#x", regs->edi);
+	if (g_syscall_32[regs->orig_eax].nargs > 5)
+		stprintf(NULL, ", %#x", regs->ebp);
+	stprintf(NULL, ") = %#x\n", regs->eax);
 }
 
 static void	print_syscall_64(t_st_config *cfg, t_user_regs_64 *regs)
 {
-	stprintf(cfg, "{");
-	stprintf(NULL, " r15 = %#llx,", regs->r15);
-	stprintf(NULL, " r14 = %#llx,", regs->r14);
-	stprintf(NULL, " r13 = %#llx,", regs->r13);
-	stprintf(NULL, " r12 = %#llx,", regs->r12);
-	stprintf(NULL, " rbp = %#llx,", regs->rbp);
-	stprintf(NULL, " rbx = %#llx,", regs->rbx);
-	stprintf(NULL, " r11 = %#llx,", regs->r11);
-	stprintf(NULL, " r10 = %#llx,", regs->r10);
-	stprintf(NULL, " r9 = %#llx,", regs->r9);
-	stprintf(NULL, " r8 = %#llx,", regs->r8);
-	stprintf(NULL, " rax = %#llx,", regs->rax);
-	stprintf(NULL, " rcx = %#llx,", regs->rcx);
-	stprintf(NULL, " rdx = %#llx,", regs->rdx);
-	stprintf(NULL, " rsi = %#llx,", regs->rsi);
-	stprintf(NULL, " rdi = %#llx,", regs->rdi);
-	stprintf(NULL, " orig_rax = %#llx,", regs->orig_rax);
-	stprintf(NULL, " rip = %#llx,", regs->rip);
-	stprintf(NULL, " cs = %#llx,", regs->cs);
-	stprintf(NULL, " eflags = %#llx,", regs->eflags);
-	stprintf(NULL, " rsp = %#llx,", regs->rsp);
-	stprintf(NULL, " ss = %#llx ", regs->ss);
-	stprintf(NULL, " fs_base = %#llx,", regs->fs_base);
-	stprintf(NULL, " gs_base = %#llx,", regs->gs_base);
-	stprintf(NULL, " ds = %#llx,", regs->ds);
-	stprintf(NULL, " es = %#llx,", regs->es);
-	stprintf(NULL, " fs = %#llx,", regs->fs);
-	stprintf(NULL, " gs = %#llx ", regs->gs);
-	stprintf(NULL, "}\n");
+	if (g_syscall_64[regs->orig_rax].name == NULL)
+		stprintf(cfg, "unknown_syscall_%d(", regs->orig_rax);
+	else
+		stprintf(cfg, "%s(", g_syscall_64[regs->orig_rax].name);
+	if (g_syscall_64[regs->orig_rax].nargs > 0)
+		stprintf(NULL, "%#x", regs->rdi);
+	if (g_syscall_64[regs->orig_rax].nargs > 1)
+		stprintf(NULL, ", %#x", regs->rsi);
+	if (g_syscall_64[regs->orig_rax].nargs > 2)
+		stprintf(NULL, ", %#x", regs->rdx);
+	if (g_syscall_64[regs->orig_rax].nargs > 3)
+		stprintf(NULL, ", %#x", regs->rcx);
+	if (g_syscall_64[regs->orig_rax].nargs > 4)
+		stprintf(NULL, ", %#x", regs->r8);
+	if (g_syscall_64[regs->orig_rax].nargs > 5)
+		stprintf(NULL, ", %#x", regs->r9);
+	stprintf(NULL, ") = %#x\n", regs->rax);
 }
 
 void	getregset(t_st_config *cfg)
