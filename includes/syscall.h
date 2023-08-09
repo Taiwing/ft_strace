@@ -17,8 +17,8 @@ extern t_syscall		g_syscall_64[];
 
 // Syscall limits
 #define SYSCALL_ARG_MAX	6
-#define SYSCALL_32_MAX	sizeof(g_syscall_32) / sizeof(t_syscall)
-#define SYSCALL_64_MAX	sizeof(g_syscall_64) / sizeof(t_syscall)
+#define SYSCALL_32_MAX	402
+#define SYSCALL_64_MAX	334
 
 /*
 ** Register structure for 32-bit processes
