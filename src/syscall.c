@@ -7,7 +7,7 @@ static void	print_syscall_32(t_st_config *cfg, t_user_regs_32 *regs)
 {
 	if (regs->orig_eax > SYSCALL_32_MAX
 		|| g_syscall_32[regs->orig_eax].name == NULL)
-		stprintf(cfg, "unknown_syscall_%d(", regs->orig_eax);
+		stprintf(cfg, "unknown_syscall_%#x(", regs->orig_eax);
 	else
 		stprintf(cfg, "%s(", g_syscall_32[regs->orig_eax].name);
 	if (g_syscall_32[regs->orig_eax].nargs > 0)
@@ -29,7 +29,7 @@ static void	print_syscall_64(t_st_config *cfg, t_user_regs_64 *regs)
 {
 	if (regs->orig_rax > SYSCALL_64_MAX
 		|| g_syscall_64[regs->orig_rax].name == NULL)
-		stprintf(cfg, "unknown_syscall_%d(", regs->orig_rax);
+		stprintf(cfg, "unknown_syscall_%#x(", regs->orig_rax);
 	else
 		stprintf(cfg, "%s(", g_syscall_64[regs->orig_rax].name);
 	if (g_syscall_64[regs->orig_rax].nargs > 0)
