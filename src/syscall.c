@@ -5,44 +5,52 @@
 
 static void	print_syscall_32(t_st_config *cfg, t_user_regs_32 *regs)
 {
+	int		nargs;
+
 	if (regs->orig_eax > SYSCALL_32_MAX
 		|| g_syscall_32[regs->orig_eax].name == NULL)
 		stprintf(cfg, "unknown_syscall_%#x(", regs->orig_eax);
 	else
 		stprintf(cfg, "%s(", g_syscall_32[regs->orig_eax].name);
-	if (g_syscall_32[regs->orig_eax].nargs > 0)
+	nargs = regs->orig_eax > SYSCALL_32_MAX ? SYSCALL_ARG_MAX
+		: g_syscall_32[regs->orig_eax].nargs;
+	if (nargs > 0)
 		stprintf(NULL, "%#x", regs->ebx);
-	if (g_syscall_32[regs->orig_eax].nargs > 1)
+	if (nargs > 1)
 		stprintf(NULL, ", %#x", regs->ecx);
-	if (g_syscall_32[regs->orig_eax].nargs > 2)
+	if (nargs > 2)
 		stprintf(NULL, ", %#x", regs->edx);
-	if (g_syscall_32[regs->orig_eax].nargs > 3)
+	if (nargs > 3)
 		stprintf(NULL, ", %#x", regs->esi);
-	if (g_syscall_32[regs->orig_eax].nargs > 4)
+	if (nargs > 4)
 		stprintf(NULL, ", %#x", regs->edi);
-	if (g_syscall_32[regs->orig_eax].nargs > 5)
+	if (nargs > 5)
 		stprintf(NULL, ", %#x", regs->ebp);
 	stprintf(NULL, ") = %#x\n", regs->eax);
 }
 
 static void	print_syscall_64(t_st_config *cfg, t_user_regs_64 *regs)
 {
+	int		nargs;
+
 	if (regs->orig_rax > SYSCALL_64_MAX
 		|| g_syscall_64[regs->orig_rax].name == NULL)
 		stprintf(cfg, "unknown_syscall_%#x(", regs->orig_rax);
 	else
 		stprintf(cfg, "%s(", g_syscall_64[regs->orig_rax].name);
-	if (g_syscall_64[regs->orig_rax].nargs > 0)
+	nargs = regs->orig_rax > SYSCALL_64_MAX ? SYSCALL_ARG_MAX
+		: g_syscall_64[regs->orig_rax].nargs;
+	if (nargs > 0)
 		stprintf(NULL, "%#x", regs->rdi);
-	if (g_syscall_64[regs->orig_rax].nargs > 1)
+	if (nargs > 1)
 		stprintf(NULL, ", %#x", regs->rsi);
-	if (g_syscall_64[regs->orig_rax].nargs > 2)
+	if (nargs > 2)
 		stprintf(NULL, ", %#x", regs->rdx);
-	if (g_syscall_64[regs->orig_rax].nargs > 3)
+	if (nargs > 3)
 		stprintf(NULL, ", %#x", regs->rcx);
-	if (g_syscall_64[regs->orig_rax].nargs > 4)
+	if (nargs > 4)
 		stprintf(NULL, ", %#x", regs->r8);
-	if (g_syscall_64[regs->orig_rax].nargs > 5)
+	if (nargs > 5)
 		stprintf(NULL, ", %#x", regs->r9);
 	stprintf(NULL, ") = %#x\n", regs->rax);
 }
