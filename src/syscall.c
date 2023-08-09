@@ -6,57 +6,57 @@
 static void	print_syscall_32(t_st_config *cfg, t_user_regs_32 *regs)
 {
 	stprintf(cfg, "{");
-	stprintf(cfg, " ebx = %#x,", regs->ebx);
-	stprintf(cfg, " ecx = %#x,", regs->ecx);
-	stprintf(cfg, " edx = %#x,", regs->edx);
-	stprintf(cfg, " esi = %#x,", regs->esi);
-	stprintf(cfg, " edi = %#x,", regs->edi);
-	stprintf(cfg, " ebp = %#x,", regs->ebp);
-	stprintf(cfg, " eax = %#x,", regs->eax);
-	stprintf(cfg, " xds = %#x,", regs->xds);
-	stprintf(cfg, " xes = %#x,", regs->xes);
-	stprintf(cfg, " xfs = %#x,", regs->xfs);
-	stprintf(cfg, " xgs = %#x,", regs->xgs);
-	stprintf(cfg, " orig_eax = %#x,", regs->orig_eax);
-	stprintf(cfg, " eip = %#x,", regs->eip);
-	stprintf(cfg, " xcs = %#x,", regs->xcs);
-	stprintf(cfg, " eflags = %#x,", regs->eflags);
-	stprintf(cfg, " esp = %#x,", regs->esp);
-	stprintf(cfg, " xss = %#x ", regs->xss);
-	stprintf(cfg, "}\n");
+	stprintf(NULL, " ebx = %#x,", regs->ebx);
+	stprintf(NULL, " ecx = %#x,", regs->ecx);
+	stprintf(NULL, " edx = %#x,", regs->edx);
+	stprintf(NULL, " esi = %#x,", regs->esi);
+	stprintf(NULL, " edi = %#x,", regs->edi);
+	stprintf(NULL, " ebp = %#x,", regs->ebp);
+	stprintf(NULL, " eax = %#x,", regs->eax);
+	stprintf(NULL, " xds = %#x,", regs->xds);
+	stprintf(NULL, " xes = %#x,", regs->xes);
+	stprintf(NULL, " xfs = %#x,", regs->xfs);
+	stprintf(NULL, " xgs = %#x,", regs->xgs);
+	stprintf(NULL, " orig_eax = %#x,", regs->orig_eax);
+	stprintf(NULL, " eip = %#x,", regs->eip);
+	stprintf(NULL, " xcs = %#x,", regs->xcs);
+	stprintf(NULL, " eflags = %#x,", regs->eflags);
+	stprintf(NULL, " esp = %#x,", regs->esp);
+	stprintf(NULL, " xss = %#x ", regs->xss);
+	stprintf(NULL, "}\n");
 }
 
 static void	print_syscall_64(t_st_config *cfg, t_user_regs_64 *regs)
 {
 	stprintf(cfg, "{");
-	stprintf(cfg, " r15 = %#llx,", regs->r15);
-	stprintf(cfg, " r14 = %#llx,", regs->r14);
-	stprintf(cfg, " r13 = %#llx,", regs->r13);
-	stprintf(cfg, " r12 = %#llx,", regs->r12);
-	stprintf(cfg, " rbp = %#llx,", regs->rbp);
-	stprintf(cfg, " rbx = %#llx,", regs->rbx);
-	stprintf(cfg, " r11 = %#llx,", regs->r11);
-	stprintf(cfg, " r10 = %#llx,", regs->r10);
-	stprintf(cfg, " r9 = %#llx,", regs->r9);
-	stprintf(cfg, " r8 = %#llx,", regs->r8);
-	stprintf(cfg, " rax = %#llx,", regs->rax);
-	stprintf(cfg, " rcx = %#llx,", regs->rcx);
-	stprintf(cfg, " rdx = %#llx,", regs->rdx);
-	stprintf(cfg, " rsi = %#llx,", regs->rsi);
-	stprintf(cfg, " rdi = %#llx,", regs->rdi);
-	stprintf(cfg, " orig_rax = %#llx,", regs->orig_rax);
-	stprintf(cfg, " rip = %#llx,", regs->rip);
-	stprintf(cfg, " cs = %#llx,", regs->cs);
-	stprintf(cfg, " eflags = %#llx,", regs->eflags);
-	stprintf(cfg, " rsp = %#llx,", regs->rsp);
-	stprintf(cfg, " ss = %#llx ", regs->ss);
-	stprintf(cfg, " fs_base = %#llx,", regs->fs_base);
-	stprintf(cfg, " gs_base = %#llx,", regs->gs_base);
-	stprintf(cfg, " ds = %#llx,", regs->ds);
-	stprintf(cfg, " es = %#llx,", regs->es);
-	stprintf(cfg, " fs = %#llx,", regs->fs);
-	stprintf(cfg, " gs = %#llx ", regs->gs);
-	stprintf(cfg, "}\n");
+	stprintf(NULL, " r15 = %#llx,", regs->r15);
+	stprintf(NULL, " r14 = %#llx,", regs->r14);
+	stprintf(NULL, " r13 = %#llx,", regs->r13);
+	stprintf(NULL, " r12 = %#llx,", regs->r12);
+	stprintf(NULL, " rbp = %#llx,", regs->rbp);
+	stprintf(NULL, " rbx = %#llx,", regs->rbx);
+	stprintf(NULL, " r11 = %#llx,", regs->r11);
+	stprintf(NULL, " r10 = %#llx,", regs->r10);
+	stprintf(NULL, " r9 = %#llx,", regs->r9);
+	stprintf(NULL, " r8 = %#llx,", regs->r8);
+	stprintf(NULL, " rax = %#llx,", regs->rax);
+	stprintf(NULL, " rcx = %#llx,", regs->rcx);
+	stprintf(NULL, " rdx = %#llx,", regs->rdx);
+	stprintf(NULL, " rsi = %#llx,", regs->rsi);
+	stprintf(NULL, " rdi = %#llx,", regs->rdi);
+	stprintf(NULL, " orig_rax = %#llx,", regs->orig_rax);
+	stprintf(NULL, " rip = %#llx,", regs->rip);
+	stprintf(NULL, " cs = %#llx,", regs->cs);
+	stprintf(NULL, " eflags = %#llx,", regs->eflags);
+	stprintf(NULL, " rsp = %#llx,", regs->rsp);
+	stprintf(NULL, " ss = %#llx ", regs->ss);
+	stprintf(NULL, " fs_base = %#llx,", regs->fs_base);
+	stprintf(NULL, " gs_base = %#llx,", regs->gs_base);
+	stprintf(NULL, " ds = %#llx,", regs->ds);
+	stprintf(NULL, " es = %#llx,", regs->es);
+	stprintf(NULL, " fs = %#llx,", regs->fs);
+	stprintf(NULL, " gs = %#llx ", regs->gs);
+	stprintf(NULL, "}\n");
 }
 
 void	getregset(t_st_config *cfg)
