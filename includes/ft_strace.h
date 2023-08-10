@@ -38,4 +38,4 @@ int				trace_process(pid_t pid);
 void			process_event_loop(t_st_config *cfg);
 char			*signame(int sig);
 int				stprintf(t_st_config *cfg, const char *format, ...);
-void			getregset(t_st_config *cfg);
+void			get_syscall(t_st_config *cfg);

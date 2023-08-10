@@ -28,7 +28,7 @@ static void	handle_stopped_process(t_st_config *cfg, int status)
 					event = (unsigned int)status >> 16;
 
 	if (sig == (SIGTRAP | 0x80)) {
-		getregset(cfg);
+		get_syscall(cfg);
 		sig = 0;
 	} else if (event) {
 		if (event == PTRACE_EVENT_STOP && (sig == SIGSTOP || sig == SIGTSTP

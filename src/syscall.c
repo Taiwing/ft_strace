@@ -117,7 +117,7 @@ static void	print_syscall_64(t_st_config *cfg, t_user_regs_64 *regs)
 	stprintf(NULL, ") = %ld\n", regs->rax);
 }
 
-void	getregset(t_st_config *cfg)
+void	get_syscall(t_st_config *cfg)
 {
 	t_user_regs		regs;
 	struct iovec	io = { .iov_base = &regs, .iov_len = sizeof(regs) };
