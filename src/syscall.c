@@ -26,7 +26,7 @@ static void	print_syscall_32(t_st_config *cfg, t_user_regs_32 *regs)
 		stprintf(NULL, ", %#x", regs->edi);
 	if (nargs > 5)
 		stprintf(NULL, ", %#x", regs->ebp);
-	stprintf(NULL, ") = %#x\n", regs->eax);
+	stprintf(NULL, ") = %d\n", regs->eax);
 }
 
 static void	print_syscall_64(t_st_config *cfg, t_user_regs_64 *regs)
@@ -52,7 +52,7 @@ static void	print_syscall_64(t_st_config *cfg, t_user_regs_64 *regs)
 		stprintf(NULL, ", %#x", regs->r8);
 	if (nargs > 5)
 		stprintf(NULL, ", %#x", regs->r9);
-	stprintf(NULL, ") = %#x\n", regs->rax);
+	stprintf(NULL, ") = %d\n", regs->rax);
 }
 
 void	getregset(t_st_config *cfg)
