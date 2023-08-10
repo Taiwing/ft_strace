@@ -13,7 +13,8 @@
   files (.tbl files and syscalls.h maybe), get the syscall number, the syscall
   name, the parameter count and the parameter types (if this is good, maybe do
   an auto-updating page as a side project, could be cool :D), do that both for
-  x86\_64 and for i386 (64bit and 32bit)
+  x86\_64 and for i386 (64bit and 32bit) (also add return type now that I see
+  that its not always int, it can be a pointer in case of mmap)
 - rework the syscall structure so that it includes a list of argument types (but
   simplified to not get crazy on printing, like a generic address type for
   non-char pointers, int, uint, etc...)
