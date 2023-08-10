@@ -122,7 +122,8 @@ void	get_syscall(t_st_config *cfg)
 	t_user_regs		regs;
 	struct iovec	io = { .iov_base = &regs, .iov_len = sizeof(regs) };
 
-	if (ptrace(PTRACE_GETREGSET, cfg->current_process, NT_PRSTATUS, &io) < 0)
+	if (ptrace(PTRACE_GETREGSET, cfg->current_process->pid,
+		NT_PRSTATUS, &io) < 0)
 		err(EXIT_FAILURE, "ptrace");
 	if (io.iov_len == sizeof(t_user_regs_32))
 		print_syscall_32(cfg, &regs.regs32);

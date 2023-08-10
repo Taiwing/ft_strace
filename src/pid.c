@@ -1,7 +1,15 @@
 #include "ft_strace.h"
 #include <string.h>
 
-int		trace_process(pid_t pid)
+t_st_process	*find_process(t_st_config *cfg, pid_t pid)
+{
+	for (size_t i = 0; i < cfg->process_table_size; ++i)
+		if (cfg->process_table[i].pid == pid)
+			return (cfg->process_table + i);
+	return (NULL);
+}
+
+int				trace_process(pid_t pid)
 {
 	int	status;
 
@@ -39,7 +47,7 @@ int		trace_process(pid_t pid)
 	return (0);
 }
 
-size_t	parse_pid_list(pid_t *dest, char *pid_argument)
+size_t			parse_pid_list(t_st_process *dest, char *pid_argument)
 {
 	pid_t		pid = 0;
 	size_t		size = 0;
@@ -55,7 +63,7 @@ size_t	parse_pid_list(pid_t *dest, char *pid_argument)
 		pid = (pid_t)strtol(tok, &tail, 0);
 		if (pid < 0 || tail == tok || *tail != '\0')
 			error(EXIT_FAILURE, EINVAL, "%s: '%s'", __func__, tok);
-		dest[size++] = pid;
+		dest[size++].pid = pid;
 	}
 	if (!size)
 		error(EXIT_FAILURE, EINVAL, "%s: '%s'", __func__, pid_argument);

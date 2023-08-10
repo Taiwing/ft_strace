@@ -24,8 +24,8 @@ int	stprintf(t_st_config *cfg, const char *format, ...)
 	va_list		args;
 	int			ret;
 
-	if (cfg && cfg->process_count > 1)
-		fprintf(stderr, "[pid %5u] ", cfg->current_process);
+	if (cfg && cfg->running_processes > 1)
+		fprintf(stderr, "[pid %5u] ", cfg->current_process->pid);
 	va_start(args, format);
 	ret = vfprintf(stderr, format, args);
 	va_end(args);
