@@ -30,10 +30,11 @@ enum e_arch { E_ARCH_UNKNOWN = 0, E_ARCH_32, E_ARCH_64 };
 */
 typedef struct	s_st_process
 {
-	pid_t		pid;		// process id
-	enum e_arch	arch;		// process architecture
-	t_user_regs	regs;		// process registers
-	int			in_syscall;	// process is in syscall
+	pid_t		pid;					// process id
+	enum e_arch	arch;					// process architecture
+	t_user_regs	regs;					// process registers
+	int			in_syscall;				// process is in syscall
+	int			interrupted_syscall;	// syscall was interrupted
 }				t_st_process;
 
 /*

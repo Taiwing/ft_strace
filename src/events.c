@@ -56,6 +56,7 @@ static void	handle_stopped_process(t_st_config *cfg, int status)
 void		process_event_loop(t_st_config *cfg)
 {
 	pid_t			pid;
+	t_st_process	*process;
 	int				status = -1;
 
 	while (cfg->running_processes)
@@ -66,8 +67,15 @@ void		process_event_loop(t_st_config *cfg)
 				continue ;
 			err(EXIT_FAILURE, "waitpid");
 		}
-		else if ((cfg->current_process = find_process(cfg, pid)) == NULL)
+		else if (!(process = find_process(cfg, pid)))
 			errx(EXIT_FAILURE, "waitpid: unknown pid %d", pid);
+		else if (cfg->current_process && cfg->current_process != process
+			&& cfg->current_process->in_syscall)
+		{
+			stprintf(NULL, "<unfinished ...>\n");
+			cfg->current_process->interrupted_syscall = 1;
+		}
+		cfg->current_process = process;
 
 		if (WIFEXITED(status)) {
 			stprintf(cfg, "+++ exited with %d +++\n",
@@ -76,10 +84,9 @@ void		process_event_loop(t_st_config *cfg)
 		} else if (WIFSIGNALED(status)) {
 			stprintf(cfg, "+++ killed by %s +++\n", signame(WTERMSIG(status)));
 			--cfg->running_processes;
-		} else if (!WIFSTOPPED(status)) {
-			error(0, 0, "waitpid: unknown status %x", status);
-			--cfg->running_processes;
-		} else
+		} else if (WIFSTOPPED(status))
 			handle_stopped_process(cfg, status);
+		else
+			errx(EXIT_FAILURE, "waitpid: unknown status %x", status);
 	}
 }
