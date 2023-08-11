@@ -51,6 +51,9 @@
     0 parameter)
   - show big fat errors for syscalls that do not have a final unique prototype
 
+  - eventually add test to check if rg exists on the machine, fallback on grep
+    otherwise (the queries will have to change a little bit for that)
+
 -- find syscalls --
 
 --- MAYBE ---
