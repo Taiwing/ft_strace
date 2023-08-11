@@ -40,10 +40,6 @@
 - write an other script to generalize this process, meaning automatically get
   the syscall info for each possible arch/abi pair from the linux source
 
-  - in case of multiple prototype match try and get first file-unique match in
-    header priority order
-  - if it does not work look for the SYSCALL\_DEFINE macro and apply the same
-    priority logic
   - create a shell function to parse the sys\_xxx function declaration and get
     the return type, the parameter count and the parameter types
   - create shell functions to parse SYSCALL\_DEFINE and get the same info (but
@@ -51,7 +47,7 @@
   - handle non implemented syscalls (still add them to the final list but with
     0 parameter)
   - show big fat errors for syscalls that do not have a final unique prototype
-  - add special cases when needed (they should be few, like clone or sigreturn)
+  - add special cases when needed (they should be few, like clone)
 
   - eventually add test to check if rg exists on the machine, fallback on grep
     otherwise (the queries will have to change a little bit for that)
