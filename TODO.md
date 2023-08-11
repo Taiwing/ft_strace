@@ -31,25 +31,27 @@
 -- find syscalls --
 
 - write a script to gather syscall info automatically based on the linux source
-  files (.tbl files and syscalls.h maybe), get the syscall number, the syscall
-  name, the parameter count, the parameter types and the entry vector function
-  (if this is good, maybe do an auto-updating page as a side project, could be
-  cool :D), do that both for x86\_64 and for i386 (64bit and 32bit) (also add
+  files (\*.tbl, \*.h and \*.c files), get the syscall number, the syscall name,
+  the parameter count, the parameter types and the entry vector function (if
+  this is good, maybe do an auto-updating page as a side project, could be cool
+  :D), do that both for x86\_64 and for i386 (64bit and 32bit) (also add
   return type now that I see that its not always int, it can be a pointer in
   case of mmap)
+- write an other script to generalize this process, meaning automatically get
+  the syscall info for each possible arch/abi pair from the linux source
 
-  - in case of multiple SYSCALL\_DEFINE matches try and find the file for the
-    right architecture that has only one match
-  - if it does not work look for the "entry vector" (meaning the sys\_xxx
-    function declaration) in a header (try and get one match too, like for the
-	defines)
-  - create shell functions to parse SYSCALL\_DEFINE and get the parameter count
-    and each parameter type and name
-  - create an other one to parse the sys\_xxx function declaration and get the
-    same info
+  - in case of multiple prototype match try and get first file-unique match in
+    header priority order
+  - if it does not work look for the SYSCALL\_DEFINE macro and apply the same
+    priority logic
+  - create a shell function to parse the sys\_xxx function declaration and get
+    the return type, the parameter count and the parameter types
+  - create shell functions to parse SYSCALL\_DEFINE and get the same info (but
+    without the return type that will be set to long by default)
   - handle non implemented syscalls (still add them to the final list but with
     0 parameter)
   - show big fat errors for syscalls that do not have a final unique prototype
+  - add special cases when needed (they should be few, like clone or sigreturn)
 
   - eventually add test to check if rg exists on the machine, fallback on grep
     otherwise (the queries will have to change a little bit for that)
