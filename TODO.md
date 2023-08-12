@@ -37,13 +37,12 @@
   :D), do that both for x86\_64 and for i386 (64bit and 32bit) (also add
   return type now that I see that its not always int, it can be a pointer in
   case of mmap)
-- write an other script to generalize this process, meaning automatically get
-  the syscall info for each possible arch/abi pair from the linux source
 - possibly handle other architectures that only rely on the generic syscall
   table defined in include/uapi/asm-generic/unistd.h, if I understand correctly
   this might apply to every sub directory under the arch/ directory that does
   not contain a specific syscall ".tbl" file (maybe create a custom generic
   .tbl" file from the header and use it instead of a specific one)
+- write usage functions for both scripts
 
   - create a shell function to parse the sys\_xxx function declaration and get
     the return type, the parameter count and the parameter types
