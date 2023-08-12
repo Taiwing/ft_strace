@@ -44,16 +44,6 @@
   this might apply to every sub directory under the arch/ directory that does
   not contain a specific syscall ".tbl" file (maybe create a custom generic
   .tbl" file from the header and use it instead of a specific one)
-- see how to handle the compat_* stuff (a lot of syscalls are actually missing
-  because only one of syscall entry or compat is given (the other is "-"), do we
-  add it to the collected data ? do we ignore it if the normal entry is given ?
-  if there is only the compat, what to do ? use it to replace the entry ? But
-  really, what does this fucking "-" symbol mean ? Is it just like empty but to
-  be able to have only the compat column filled ? Probably, but why do this ?
-  why not use the regular entry point column instead if there is only one ? Is
-  this because the syscall should not work under normal circumstances ? so many
-  questions... (see linux/arch/s390/kernel/syscalls/syscall.tbl for an example
-  of this)
 
   - create a shell function to parse the sys\_xxx function declaration and get
     the return type, the parameter count and the parameter types
