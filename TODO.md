@@ -44,6 +44,13 @@
   .tbl" file from the header and use it instead of a specific one)
 - write usage functions for both scripts
 
+  - fix the multiple definition problem by using the kconfig files and
+    precompiling the problematic source file with gcc -E (this will return the
+	same file but with preprocessing applied), define every kconfig option by
+	passing a '-D CONFIG_\<option name\>' for each of them, and possibly
+	(probably) include the required header file for the \_\_ARCH\_WANT values,
+	then, if I'm right, using this output to create a file and applying the same
+	grep function to it should yield a unique result
   - create a shell function to parse the sys\_xxx function declaration and get
     the return type, the parameter count and the parameter types
   - create shell functions to parse SYSCALL\_DEFINE and get the same info (but
@@ -51,7 +58,6 @@
   - handle non implemented syscalls (still add them to the final list but with
     0 parameter)
   - show big fat errors for syscalls that do not have a final unique prototype
-  - add special cases when needed (they should be few, like clone)
 
   - eventually add test to check if rg exists on the machine, fallback on grep
     otherwise (the queries will have to change a little bit for that)
