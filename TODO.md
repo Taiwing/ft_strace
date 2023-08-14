@@ -44,22 +44,6 @@
   .tbl" file from the header and use it instead of a specific one)
 - write usage functions for both scripts
 
-  - fix the multiple definition problem by using the kconfig files and
-    precompiling the problematic source file with gcc -E (this will return the
-	same file but with preprocessing applied), define every kconfig option by
-	passing a '-D CONFIG_\<option name\>' for each of them, and possibly
-	(probably) include the required header file for the \_\_ARCH\_WANT values,
-	then, if I'm right, using this output to create a file and applying the same
-	grep function to it should yield a unique result (including the right
-	headers might be as simple as adding a '-I include/' to the gcc command)
-	- hmmm maybe preprocess the source file before gcc, remove every include
-	  with a 'grep -v "^\s*#\s*include\b.\*"' or something like that because
-	  missing headers are fucking up gcc's -E option (we dont need them really)
-	- also probably manually add a '-D \_\_ARCH\_WANT_\<syscall entry\> in case
-	  it is needed (it should be in a header but its hard to actually do, and
-	  we know that we actually need the syscall, otherwise we would not be
-	  looking for it lol, so its not a problem, the real config is in Kconfig
-	  anyway)
   - create a shell function to parse the sys\_xxx function declaration and get
     the return type, the parameter count and the parameter types
   - create shell functions to parse SYSCALL\_DEFINE and get the same info (but
