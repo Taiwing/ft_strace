@@ -33,6 +33,7 @@
 - see how I can fix the missing parameter names, this is quite annoying
 - maybe do an auto-updating page from the script as a side project, could be
   cool :D)
+- try and fix the missing syscalls
 - possibly handle other architectures that only rely on the generic syscall
   table defined in include/uapi/asm-generic/unistd.h, if I understand correctly
   this might apply to every sub directory under the arch/ directory that does
