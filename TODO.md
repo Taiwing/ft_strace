@@ -30,22 +30,15 @@
 
 -- find syscalls --
 
-- write a script to gather syscall info automatically based on the linux source
-  files (\*.tbl, \*.h and \*.c files), get the syscall number, the syscall name,
-  the parameter count, the parameter types and the entry vector function (if
-  this is good, maybe do an auto-updating page as a side project, could be cool
-  :D), do that both for x86\_64 and for i386 (64bit and 32bit) (also add
-  return type now that I see that its not always int, it can be a pointer in
-  case of mmap)
+- see how I can fix the missing parameter names, this is quite annoying
+- maybe do an auto-updating page from the script as a side project, could be
+  cool :D)
 - possibly handle other architectures that only rely on the generic syscall
   table defined in include/uapi/asm-generic/unistd.h, if I understand correctly
   this might apply to every sub directory under the arch/ directory that does
   not contain a specific syscall ".tbl" file (maybe create a custom generic
   .tbl" file from the header and use it instead of a specific one)
 - write usage functions for both scripts
-
-  - create shell functions to parse SYSCALL\_DEFINE and get the same info (but
-    without the return type that will be set to long by default)
 
   - eventually add test to check if rg exists on the machine, fallback on grep
     otherwise (the queries will have to change a little bit for that)
