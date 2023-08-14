@@ -44,13 +44,8 @@
   .tbl" file from the header and use it instead of a specific one)
 - write usage functions for both scripts
 
-  - create a shell function to parse the sys\_xxx function declaration and get
-    the return type, the parameter count and the parameter types
   - create shell functions to parse SYSCALL\_DEFINE and get the same info (but
     without the return type that will be set to long by default)
-  - handle non implemented syscalls (still add them to the final list but with
-    0 parameter)
-  - show big fat errors for syscalls that do not have a final unique prototype
 
   - eventually add test to check if rg exists on the machine, fallback on grep
     otherwise (the queries will have to change a little bit for that)
