@@ -30,19 +30,21 @@
 
 -- find syscalls --
 
-- see how I can fix the missing parameter names, this is quite annoying
-- maybe do an auto-updating page from the script as a side project, could be
-  cool :D)
-- try and fix the missing syscalls
+- Maybe use the function definitions of the syscalls if they exist, not just the
+  SYSCALL\_DEFINE or prototype. This would probably be better than the prototype
+  technique. We might find more missing syscalls and this would avoid the
+  anonymous parameters problem. Might kill two birds with one stone.
+  - see how I can fix the missing parameter names, this is quite annoying
+  - try and fix the missing syscalls
+- do an auto-updating page from the script as a side project, could be cool :D
+
 - possibly handle other architectures that only rely on the generic syscall
   table defined in include/uapi/asm-generic/unistd.h, if I understand correctly
   this might apply to every sub directory under the arch/ directory that does
   not contain a specific syscall ".tbl" file (maybe create a custom generic
   .tbl" file from the header and use it instead of a specific one)
+- eventually add test to check if rg exists on the machine (and other deps)
 - write usage functions for both scripts
-
-  - eventually add test to check if rg exists on the machine, fallback on grep
-    otherwise (the queries will have to change a little bit for that)
 
 -- find syscalls --
 
