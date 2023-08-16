@@ -37,7 +37,7 @@
   same place, maybe refactor what can be refactored)
 - add options, like an option to add a 'fake' name to the anonymous parameters
 
-- maybe completely refactor the script: Do this the other way around, meaning
+- MAYBE completely refactor the script: Do this the other way around, meaning
   first get every syscall definition, prototype, etc... parse them and store
   them in a big array/dictionnary. Add more info to it, like the filename and
   the line of the match. Then parse every syscall table as usual and simply look
