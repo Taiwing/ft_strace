@@ -37,6 +37,9 @@
   - see how I can fix the missing parameter names, this is quite annoying
   - try and fix the missing syscalls
 - do an auto-updating page from the script as a side project, could be cool :D
+- cleanup the script a little bit (move the always executing sections to the
+  same place, maybe refactor what can be refactored)
+- add options, like an option to add a 'fake' name to the anonymous parameters
 
 - possibly handle other architectures that only rely on the generic syscall
   table defined in include/uapi/asm-generic/unistd.h, if I understand correctly
