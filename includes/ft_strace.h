@@ -34,6 +34,7 @@ typedef struct	s_st_process
 	enum e_arch	arch;					// process architecture
 	t_user_regs	regs;					// process registers
 	int			in_syscall;				// process is in syscall
+	int			current_syscall;		// current syscall number
 	int			interrupted_syscall;	// syscall was interrupted
 }				t_st_process;
 
@@ -62,4 +63,9 @@ t_st_process	*find_process(t_st_config *cfg, pid_t pid);
 void			process_event_loop(t_st_config *cfg);
 char			*signame(int sig);
 int				stprintf(t_st_config *cfg, const char *format, ...);
-void			get_syscall(t_st_config *cfg);
+void			get_syscall(t_st_process *process);
+void			print_syscall(t_st_config *cfg);
+void			print_syscall_32(t_st_config *cfg);
+void			print_syscall_64(t_st_config *cfg);
+void			print_signal(t_st_config *cfg,
+					unsigned int sig, unsigned int stopped, siginfo_t *si);
