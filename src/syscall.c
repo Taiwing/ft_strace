@@ -61,58 +61,50 @@ static void	print_regset_64(t_st_config *cfg, t_user_regs_64 *regs)
 
 static void	print_syscall_32(t_st_config *cfg, t_user_regs_32 *regs)
 {
-	int		nargs;
-
-	if (regs->orig_eax > SYSCALL_32_MAX
-		|| g_syscall_32[regs->orig_eax].name == NULL)
+	if (regs->orig_eax >= G_SYSCALL_X86_I386
+		|| g_syscall_x86_i386[regs->orig_eax].name == NULL)
 	{
 		print_regset_32(cfg, regs); //DEBUG
 		stprintf(NULL, "unknown_syscall_%#x(", regs->orig_eax);
 	}
 	else
-		stprintf(cfg, "%s(", g_syscall_32[regs->orig_eax].name);
-	nargs = regs->orig_eax > SYSCALL_32_MAX ? SYSCALL_ARG_MAX
-		: g_syscall_32[regs->orig_eax].nargs;
-	if (nargs > 0)
+		stprintf(cfg, "%s(", g_syscall_x86_i386[regs->orig_eax].name);
+	if (g_syscall_x86_i386[regs->orig_eax].parameter_type[0] != TNONE)
 		stprintf(NULL, "%#x", regs->ebx);
-	if (nargs > 1)
+	if (g_syscall_x86_i386[regs->orig_eax].parameter_type[1] != TNONE)
 		stprintf(NULL, ", %#x", regs->ecx);
-	if (nargs > 2)
+	if (g_syscall_x86_i386[regs->orig_eax].parameter_type[2] != TNONE)
 		stprintf(NULL, ", %#x", regs->edx);
-	if (nargs > 3)
+	if (g_syscall_x86_i386[regs->orig_eax].parameter_type[3] != TNONE)
 		stprintf(NULL, ", %#x", regs->esi);
-	if (nargs > 4)
+	if (g_syscall_x86_i386[regs->orig_eax].parameter_type[4] != TNONE)
 		stprintf(NULL, ", %#x", regs->edi);
-	if (nargs > 5)
+	if (g_syscall_x86_i386[regs->orig_eax].parameter_type[5] != TNONE)
 		stprintf(NULL, ", %#x", regs->ebp);
 	stprintf(NULL, ") = %d\n", regs->eax);
 }
 
 static void	print_syscall_64(t_st_config *cfg, t_user_regs_64 *regs)
 {
-	int		nargs;
-
-	if (regs->orig_rax > SYSCALL_64_MAX
-		|| g_syscall_64[regs->orig_rax].name == NULL)
+	if (regs->orig_rax >= G_SYSCALL_X86_64
+		|| g_syscall_x86_64[regs->orig_rax].name == NULL)
 	{
 		print_regset_64(cfg, regs); //DEBUG
 		stprintf(cfg, "unknown_syscall_%#lx(", regs->orig_rax);
 	}
 	else
-		stprintf(cfg, "%s(", g_syscall_64[regs->orig_rax].name);
-	nargs = regs->orig_rax > SYSCALL_64_MAX ? SYSCALL_ARG_MAX
-		: g_syscall_64[regs->orig_rax].nargs;
-	if (nargs > 0)
+		stprintf(cfg, "%s(", g_syscall_x86_64[regs->orig_rax].name);
+	if (g_syscall_x86_64[regs->orig_rax].parameter_type[0] != TNONE)
 		stprintf(NULL, "%#lx", regs->rdi);
-	if (nargs > 1)
+	if (g_syscall_x86_64[regs->orig_rax].parameter_type[1] != TNONE)
 		stprintf(NULL, ", %#lx", regs->rsi);
-	if (nargs > 2)
+	if (g_syscall_x86_64[regs->orig_rax].parameter_type[2] != TNONE)
 		stprintf(NULL, ", %#lx", regs->rdx);
-	if (nargs > 3)
+	if (g_syscall_x86_64[regs->orig_rax].parameter_type[3] != TNONE)
 		stprintf(NULL, ", %#lx", regs->rcx);
-	if (nargs > 4)
+	if (g_syscall_x86_64[regs->orig_rax].parameter_type[4] != TNONE)
 		stprintf(NULL, ", %#lx", regs->r8);
-	if (nargs > 5)
+	if (g_syscall_x86_64[regs->orig_rax].parameter_type[5] != TNONE)
 		stprintf(NULL, ", %#lx", regs->r9);
 	stprintf(NULL, ") = %ld\n", regs->rax);
 }

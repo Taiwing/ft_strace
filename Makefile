@@ -12,8 +12,9 @@ NAME		=	ft_strace
 
 SRCC			=	syscall.c\
 					main.c\
-					syscall_tables.c\
 					print.c\
+					syscall_table_x86_64.c\
+					syscall_table_x86_i386.c\
 					pid.c\
 					events.c\
 					execute_command.c\
@@ -35,14 +36,15 @@ $(NAME): $(ODIR) $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $(patsubst %.o,$(ODIR)/%.o,$(OBJ))
 
 syscall.o: ft_strace.h syscall.h
-main.o: ft_strace.h
-syscall_tables.o: syscall.h
-print.o: ft_strace.h
-pid.o: ft_strace.h
-events.o: ft_strace.h
-execute_command.o: ft_strace.h
-find_command.o: ft_strace.h
-options.o: ft_strace.h
+main.o: ft_strace.h syscall.h
+print.o: ft_strace.h syscall.h
+syscall_table_x86_64.o: syscall.h
+syscall_table_x86_i386.o: syscall.h
+pid.o: ft_strace.h syscall.h
+events.o: ft_strace.h syscall.h
+execute_command.o: ft_strace.h syscall.h
+find_command.o: ft_strace.h syscall.h
+options.o: ft_strace.h syscall.h
 %.o: %.c
 	@mkdir -p $(ODIR)
 	$(CC) -c $(CFLAGS) $< $(HFLAGS) -o $(ODIR)/$@

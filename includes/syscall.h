@@ -3,22 +3,43 @@
 #include <stdint.h>
 
 /*
-** Syscall
+** Syscall parameter types
 */
-typedef struct	s_syscall
-{
-	int			nargs;
-	char		*name;
-}				t_syscall;
-
-// Syscall tables
-extern t_syscall		g_syscall_32[];
-extern t_syscall		g_syscall_64[];
+enum	e_syscall_type {
+	TNONE = 0,	// no parameter
+	TUSHRT,		// unsigned short
+	TINT,		// int
+	TUINT,		// unsigned int
+	TLINT,		// long
+	TLUINT,		// unsigned long
+	TPTR,		// address
+	TSTR,		// regular string
+	TASTR,		// string array
+	TSCHAR,		// sized char buffer (size is in the next param)
+	TWSCHAR,	// hanging sized char buffer (size is the positive return value)
+	TWSTR,		// hanging string
+};
 
 // Syscall limits
-#define SYSCALL_ARG_MAX	6
-#define SYSCALL_32_MAX	452
-#define SYSCALL_64_MAX	452
+#define G_SYSCALL_X86_64 452
+#define G_SYSCALL_X86_I386 452
+#define SYSCALL_MAX_PARAMETERS 6
+
+/*
+** Syscall
+*/
+typedef struct			s_syscall
+{
+	char				*name;
+	enum e_syscall_type	return_type;
+	enum e_syscall_type	parameter_type[SYSCALL_MAX_PARAMETERS];
+}						t_syscall;
+
+/*
+** Syscall tables
+*/
+extern const t_syscall	g_syscall_x86_64[G_SYSCALL_X86_64];
+extern const t_syscall	g_syscall_x86_i386[G_SYSCALL_X86_I386];
 
 /*
 ** Register structure for 32-bit processes
