@@ -4,7 +4,9 @@
 - handle ERESTARTSYS ERESTARTNOINTR and ERESTARTNOHAND (show '?' as a return
   value and print the ERESTART* value after it like the original). It happens
   when a syscall is interrupted by a signal and SA\_RESTART flag is set (the
-  syscall restarts).
+  syscall restarts). More generally, handle errno values for failing syscalls
+  (depending on the return type I guess...)
+- update the return types for some calls, like mmap or brk who return a pointer
 - implement the other options/bonuses
 - cleanup the events.c code a little bit and add some comments to clarify all
   this because this is not very very clear as is
