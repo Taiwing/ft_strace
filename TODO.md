@@ -12,17 +12,6 @@
   -- ok to fix this, I should not check the syscall number again on exit tracing
   -- because we already know it (just save the first getregset result and use
   -- this as a reference if needed, just get the result)
-- rework the syscall structure so that it includes a list of argument types (but
-  simplified to not get crazy on printing, like a generic address type for
-  non-char pointers, int, uint, etc...)
-- maybe add a 'flag' for arguments that have to be waited for (meaning that the
-  value will be set on syscall exit like for the read buffer content), this
-  would only really make sense for printable addresses like strings (or char
-  buffers in general). This would be cool to generalize the waiting process
-  (not just create ugly special cases for read and read like syscalls)
-- check that the syscall parameters are read from the right registers
-  (especially in 64bit, where there seems to be two different register schemes,
-  a "kernel" and a "user" one, look that shit up to make sure this is good)
 - handle ERESTARTSYS ERESTARTNOINTR and ERESTARTNOHAND (show '?' as a return
   value and print the ERESTART* value after it like the original). It happens
   when a syscall is interrupted by a signal and SA\_RESTART flag is set (the
