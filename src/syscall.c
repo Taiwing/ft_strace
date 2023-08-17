@@ -101,7 +101,7 @@ static void	print_syscall_64(t_st_config *cfg, t_user_regs_64 *regs)
 	if (g_syscall_x86_64[regs->orig_rax].parameter_type[2] != TNONE)
 		stprintf(NULL, ", %#lx", regs->rdx);
 	if (g_syscall_x86_64[regs->orig_rax].parameter_type[3] != TNONE)
-		stprintf(NULL, ", %#lx", regs->rcx);
+		stprintf(NULL, ", %#lx", regs->r10);
 	if (g_syscall_x86_64[regs->orig_rax].parameter_type[4] != TNONE)
 		stprintf(NULL, ", %#lx", regs->r8);
 	if (g_syscall_x86_64[regs->orig_rax].parameter_type[5] != TNONE)
