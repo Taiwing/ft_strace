@@ -1,9 +1,14 @@
 --- TODO ---
 
+- print each type differently according to the syscall parameter types
 - handle ERESTARTSYS ERESTARTNOINTR and ERESTARTNOHAND (show '?' as a return
   value and print the ERESTART* value after it like the original). It happens
   when a syscall is interrupted by a signal and SA\_RESTART flag is set (the
   syscall restarts).
+- implement the other options/bonuses
+- cleanup the events.c code a little bit and add some comments to clarify all
+  this because this is not very very clear as is
+- test the shit out of this ft\_strace (make sure every edge case is handled)
 
 -- find syscalls --
 
