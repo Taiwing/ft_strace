@@ -9,6 +9,9 @@
 - cleanup the events.c code a little bit and add some comments to clarify all
   this because this is not very very clear as is
 - test the shit out of this ft\_strace (make sure every edge case is handled)
+- handle functions that dont return (right now exit returns the value of syscall
+  entry for example), maybe replace their return type by TNONE and force 0 on
+  TNONE syscalls (if thats what it does)
 
 -- find syscalls --
 
