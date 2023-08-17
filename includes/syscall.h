@@ -20,6 +20,9 @@ enum	e_syscall_type {
 	TWSTR,		// hanging string
 };
 
+// Macro to check if the parameter needs to be waited for
+#define IS_WAIT_TYPE(x) (x == TWSCHAR || x == TWSTR)
+
 // Syscall limits
 #define G_SYSCALL_X86_64 452
 #define G_SYSCALL_X86_I386 452
@@ -65,6 +68,16 @@ typedef struct	s_user_regs_32
 	uint32_t xss;
 }				t_user_regs_32;
 
+// Macro to get 32-bit registers from parameter index
+#define REGS_32_ARRAY(regs, index) (\
+	index == 0 ? regs->ebx : \
+	index == 1 ? regs->ecx : \
+	index == 2 ? regs->edx : \
+	index == 3 ? regs->esi : \
+	index == 4 ? regs->edi : \
+	index == 5 ? regs->ebp : 0\
+)
+
 /*
 ** Register structure for 64-bit processes
 */
@@ -98,6 +111,16 @@ typedef struct	s_user_regs_64
 	uint64_t fs;
 	uint64_t gs;
 }				t_user_regs_64;
+
+// Macro to get 64-bit registers from parameter index
+#define REGS_64_ARRAY(regs, index) (\
+	index == 0 ? regs->rdi : \
+	index == 1 ? regs->rsi : \
+	index == 2 ? regs->rdx : \
+	index == 3 ? regs->r10 : \
+	index == 4 ? regs->r8 : \
+	index == 5 ? regs->r9 : 0\
+)
 
 /*
 ** Register union for 32/64-bit processes
