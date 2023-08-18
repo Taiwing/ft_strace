@@ -80,7 +80,7 @@ void		process_event_loop(t_st_config *cfg)
 			cfg->current_process->running = 0;
 			--cfg->running_processes;
 			if (cfg->current_process == cfg->child_process)
-				cfg->exit_code = 0x100 | WTERMSIG(status);
+				cfg->exit_code = 128 + WTERMSIG(status);
 		} else if (WIFSTOPPED(status))
 			handle_stopped_process(cfg, status);
 		else

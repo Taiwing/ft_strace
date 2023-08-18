@@ -21,7 +21,7 @@ static void	sigint_handler(int sig)
 	if (g_cfg->child_process && g_cfg->child_process->running)
 		kill(g_cfg->child_process->pid, sig);
 	else
-		exit(EXIT_FAILURE);
+		exit(128 + sig);
 }
 
 void		set_signals(sigset_t *blocked)
