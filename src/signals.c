@@ -18,8 +18,10 @@ void		block_signals(sigset_t *blocked)
 
 static void	sigint_handler(int sig)
 {
-	if (g_cfg->running_processes > 0 && g_cfg->child_pid > 0)
-		kill(g_cfg->child_pid, sig);
+	if (g_cfg->child_process && g_cfg->child_process->running)
+		kill(g_cfg->child_process->pid, sig);
+	else
+		exit(EXIT_FAILURE);
 }
 
 void		set_signals(sigset_t *blocked)

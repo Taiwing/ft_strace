@@ -68,11 +68,13 @@ void		process_event_loop(t_st_config *cfg)
 			if (cfg->current_process->in_syscall)
 				print_syscall(cfg);
 			stprintf(cfg, "+++ exited with %d +++\n", WEXITSTATUS(status));
+			cfg->current_process->running = 0;
 			--cfg->running_processes;
 		} else if (WIFSIGNALED(status)) {
 			if (cfg->current_process->in_syscall)
 				stprintf(NULL, " <unfinished ...>\n");
 			stprintf(cfg, "+++ killed by %s +++\n", signame(WTERMSIG(status)));
+			cfg->current_process->running = 0;
 			--cfg->running_processes;
 		} else if (WIFSTOPPED(status))
 			handle_stopped_process(cfg, status);

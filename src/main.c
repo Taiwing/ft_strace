@@ -8,7 +8,6 @@ int	main(int argc, char **argv)
 	char		**args = NULL, *command;
 
 	g_cfg = &cfg;
-	cfg.child_pid = -1;
 	program_invocation_name = program_invocation_short_name;
 	args = parse_options(&cfg, argc, argv);
 	if (!*args && !cfg.process_table_size)
@@ -19,6 +18,7 @@ int	main(int argc, char **argv)
 		if (!trace_process(&cfg, cfg.process_table[i].pid))
 		{
 			warnx("Process %u attached", cfg.process_table[i].pid);
+			cfg.process_table[i].running = 1;
 			++cfg.running_processes;
 		}
 
@@ -28,8 +28,10 @@ int	main(int argc, char **argv)
 			errx(EXIT_FAILURE, "too many processes (max %d)", MAX_PROCESS);
 		else if ((command = find_command(*args)))
 		{
-			cfg.child_pid = execute_command(&cfg, command, args);
-			cfg.process_table[cfg.process_table_size++].pid = cfg.child_pid;
+			pid_t	pid = execute_command(&cfg, command, args);
+			cfg.child_process = cfg.process_table + cfg.process_table_size++;
+			cfg.child_process->pid = pid;
+			cfg.child_process->running = 1;
 			++cfg.running_processes;
 		}
 	}

@@ -28,15 +28,16 @@ enum e_arch { E_ARCH_UNKNOWN = 0, E_ARCH_32, E_ARCH_64 };
 /*
 ** process state
 */
-typedef struct	s_st_process
+typedef struct		s_st_process
 {
-	pid_t		pid;					// process id
-	enum e_arch	arch;					// process architecture
-	t_user_regs	regs;					// process registers
-	int			in_syscall;				// process is in syscall
-	int			current_syscall;		// current syscall number
-	int			interrupted_syscall;	// syscall was interrupted
-}				t_st_process;
+	pid_t			pid;					// process id
+	enum e_arch		arch;					// process architecture
+	t_user_regs		regs;					// process registers
+	sig_atomic_t	running;				// process is running
+	int				in_syscall;				// process is in syscall
+	int				current_syscall;		// current syscall number
+	int				interrupted_syscall;	// syscall was interrupted
+}					t_st_process;
 
 /*
 ** ft_strace global configuration
@@ -47,10 +48,10 @@ typedef struct		s_st_config
 	int				hide_output;					// -c hides regular output
 	sigset_t		blocked;						// signals to block
 	t_st_process	process_table[MAX_PROCESS];		// traced processes table
-	pid_t			child_pid;						// child pid
 	size_t			process_table_size;				// traced processes count
 	sig_atomic_t	running_processes;				// running processes count
 	t_st_process	*current_process;				// current event's process
+	t_st_process	*child_process;					// syscall process
 }					t_st_config;
 
 // global configuration
