@@ -42,12 +42,12 @@ int	main(int argc, char **argv)
 	process_event_loop(&cfg);
 
 	// Child process exited with a signal, replicate it
-	if (cfg.exit_code > 128)
+	if (cfg.exit_code > 0xff)
 	{
-		cfg.exit_code -= 128;
+		cfg.exit_code &= 0xff;
 		signal(cfg.exit_code, SIG_DFL);
 		raise(cfg.exit_code);
-		cfg.exit_code += 128;
+		cfg.exit_code |= 0x80;
 	}
 
 	return (cfg.exit_code);
