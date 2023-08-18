@@ -45,6 +45,7 @@ typedef struct		s_st_config
 {
 	int				summary;						// -c and -C print summary
 	int				hide_output;					// -c hides regular output
+	sigset_t		blocked;						// signals to block
 	t_st_process	process_table[MAX_PROCESS];		// traced processes table
 	size_t			process_table_size;				// traced processes count
 	size_t			running_processes;				// running processes count
@@ -56,9 +57,14 @@ typedef struct		s_st_config
 */
 size_t			parse_pid_list(t_st_process *dest, char *pid_argument);
 char			**parse_options(t_st_config *cfg,  int argc, char **argv);
+void			set_blocked_signals(sigset_t *blocked);
+void			unblock_signals(void);
+void			block_signals(sigset_t *blocked);
+pid_t			st_waitpid(t_st_config *cfg, pid_t pid,
+					int *status, int options);
 char			*find_command(char *cmd_name);
-pid_t			execute_command(char *command, char **argv);
-int				trace_process(pid_t pid);
+pid_t			execute_command(t_st_config *cfg, char *command, char **argv);
+int				trace_process(t_st_config *cfg, pid_t pid);
 t_st_process	*find_process(t_st_config *cfg, pid_t pid);
 void			process_event_loop(t_st_config *cfg);
 char			*signame(int sig);

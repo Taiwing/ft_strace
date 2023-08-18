@@ -21,6 +21,7 @@ SRCC			=	syscall.c\
 					print_syscall_64.c\
 					find_command.c\
 					print_syscall_32.c\
+					signals.c\
 					options.c\
 
 ODIR			=	obj
@@ -48,6 +49,7 @@ execute_command.o: ft_strace.h syscall.h
 print_syscall_64.o: ft_strace.h syscall.h
 find_command.o: ft_strace.h syscall.h
 print_syscall_32.o: ft_strace.h syscall.h
+signals.o: ft_strace.h syscall.h
 options.o: ft_strace.h syscall.h
 %.o: %.c
 	@mkdir -p $(ODIR)

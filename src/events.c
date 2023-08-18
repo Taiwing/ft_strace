@@ -1,5 +1,17 @@
 #include "ft_strace.h"
 
+pid_t		st_waitpid(t_st_config *cfg, pid_t pid, int *status, int options)
+{
+	pid_t	ret;
+
+	unblock_signals();
+	while ((ret = waitpid(pid, status, options)) < 0 && errno == EINTR);
+	if (ret < 0)
+		err(EXIT_FAILURE, "waitpid");
+	block_signals(&cfg->blocked);
+	return (ret);
+}
+
 static void	handle_stopped_process(t_st_config *cfg, int status)
 {
 	siginfo_t		siginfo;
@@ -41,13 +53,8 @@ void		process_event_loop(t_st_config *cfg)
 
 	while (cfg->running_processes)
 	{
-		if ((pid = waitpid(-1, &status, __WALL)) <= 0)
-		{
-			if (errno == EINTR)
-				continue ;
-			err(EXIT_FAILURE, "waitpid");
-		}
-		else if (!(process = find_process(cfg, pid)))
+		pid = st_waitpid(cfg, -1, &status, __WALL);
+		if (!(process = find_process(cfg, pid)))
 			errx(EXIT_FAILURE, "waitpid: unknown pid %d", pid);
 		else if (cfg->current_process && cfg->current_process != process
 			&& cfg->current_process->in_syscall)

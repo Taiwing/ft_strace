@@ -1,13 +1,11 @@
 #include "ft_strace.h"
 
-static void	trace_child(pid_t pid)
+static void	trace_child(t_st_config *cfg, pid_t pid)
 {
 	int status;
 
 	// Wait for the child to stop.
-	while (waitpid(pid, &status, WUNTRACED) < 0)
-		if (errno != EINTR)
-			err(EXIT_FAILURE, "waitpid");
+	st_waitpid(cfg, pid, &status, WUNTRACED);
 	if (!WIFSTOPPED(status) || WSTOPSIG(status) != SIGSTOP) {
 		kill(pid, SIGKILL);
 		error(EXIT_FAILURE, 0, "child did not stop");
@@ -45,7 +43,7 @@ static void	child_process(char *command, char **argv)
 	err(EXIT_FAILURE, "'%s'", *argv);
 }
 
-pid_t		execute_command(char *command, char **argv)
+pid_t		execute_command(t_st_config *cfg, char *command, char **argv)
 {
 	pid_t	pid = fork();
 
@@ -59,7 +57,7 @@ pid_t		execute_command(char *command, char **argv)
 	else
 	{
 		free(command);
-		trace_child(pid);
+		trace_child(cfg, pid);
 	}
 	return (pid);
 }
