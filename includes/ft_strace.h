@@ -52,6 +52,7 @@ typedef struct		s_st_config
 	sig_atomic_t	running_processes;				// running processes count
 	t_st_process	*current_process;				// current event's process
 	t_st_process	*child_process;					// syscall process
+	int				exit_code;						// exit code
 }					t_st_config;
 
 // global configuration

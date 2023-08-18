@@ -41,5 +41,13 @@ int	main(int argc, char **argv)
 	set_signals(&cfg.blocked);
 	process_event_loop(&cfg);
 
-	return (EXIT_SUCCESS);
+	// Child process exited with a signal, replicate it
+	if (cfg.exit_code > 0xff)
+	{
+		cfg.exit_code &= 0xff;
+		signal(cfg.exit_code, SIG_DFL);
+		raise(cfg.exit_code);
+	}
+
+	return (cfg.exit_code);
 }

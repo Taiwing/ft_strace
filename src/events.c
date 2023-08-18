@@ -70,6 +70,8 @@ void		process_event_loop(t_st_config *cfg)
 			stprintf(cfg, "+++ exited with %d +++\n", WEXITSTATUS(status));
 			cfg->current_process->running = 0;
 			--cfg->running_processes;
+			if (cfg->current_process == cfg->child_process)
+				cfg->exit_code = WEXITSTATUS(status);
 		} else if (WIFSIGNALED(status)) {
 			if (cfg->current_process->in_syscall)
 				stprintf(NULL, " <unfinished ...>\n");
@@ -77,6 +79,8 @@ void		process_event_loop(t_st_config *cfg)
 				WCOREDUMP(status) ? "(core dumped) " : "");
 			cfg->current_process->running = 0;
 			--cfg->running_processes;
+			if (cfg->current_process == cfg->child_process)
+				cfg->exit_code = 0x100 | WTERMSIG(status);
 		} else if (WIFSTOPPED(status))
 			handle_stopped_process(cfg, status);
 		else
