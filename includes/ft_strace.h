@@ -47,17 +47,21 @@ typedef struct		s_st_config
 	int				hide_output;					// -c hides regular output
 	sigset_t		blocked;						// signals to block
 	t_st_process	process_table[MAX_PROCESS];		// traced processes table
+	pid_t			child_pid;						// child pid
 	size_t			process_table_size;				// traced processes count
-	size_t			running_processes;				// running processes count
+	sig_atomic_t	running_processes;				// running processes count
 	t_st_process	*current_process;				// current event's process
 }					t_st_config;
+
+// global configuration
+extern t_st_config	*g_cfg;
 
 /*
 ** functions
 */
 size_t			parse_pid_list(t_st_process *dest, char *pid_argument);
 char			**parse_options(t_st_config *cfg,  int argc, char **argv);
-void			set_blocked_signals(sigset_t *blocked);
+void			set_signals(sigset_t *blocked);
 void			unblock_signals(void);
 void			block_signals(sigset_t *blocked);
 pid_t			st_waitpid(t_st_config *cfg, pid_t pid,

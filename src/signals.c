@@ -1,6 +1,6 @@
 #include "ft_strace.h"
 
-void	unblock_signals(void)
+void		unblock_signals(void)
 {
 	sigset_t	empty;
 
@@ -10,13 +10,19 @@ void	unblock_signals(void)
 		err(EXIT_FAILURE, "sigprocmask");
 }
 
-void	block_signals(sigset_t *blocked)
+void		block_signals(sigset_t *blocked)
 {
 	if (sigprocmask(SIG_BLOCK, blocked, NULL))
 		err(EXIT_FAILURE, "sigprocmask");
 }
 
-void	set_blocked_signals(sigset_t *blocked)
+static void	sigint_handler(int sig)
+{
+	if (g_cfg->running_processes > 0 && g_cfg->child_pid > 0)
+		kill(g_cfg->child_pid, sig);
+}
+
+void		set_signals(sigset_t *blocked)
 {
 	if (sigemptyset(blocked))
 		err(EXIT_FAILURE, "sigemptyset");
@@ -24,4 +30,6 @@ void	set_blocked_signals(sigset_t *blocked)
 		|| sigaddset(blocked, SIGQUIT) || sigaddset(blocked, SIGPIPE)
 		|| sigaddset(blocked, SIGTERM))
 		err(EXIT_FAILURE, "sigaddset");
+	if (signal(SIGINT, sigint_handler) == SIG_ERR)
+		err(EXIT_FAILURE, "signal");
 }
