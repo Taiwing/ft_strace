@@ -73,7 +73,8 @@ void		process_event_loop(t_st_config *cfg)
 		} else if (WIFSIGNALED(status)) {
 			if (cfg->current_process->in_syscall)
 				stprintf(NULL, " <unfinished ...>\n");
-			stprintf(cfg, "+++ killed by %s +++\n", signame(WTERMSIG(status)));
+			stprintf(cfg, "+++ killed by %s %s+++\n", signame(WTERMSIG(status)),
+				WCOREDUMP(status) ? "(core dumped) " : "");
 			cfg->current_process->running = 0;
 			--cfg->running_processes;
 		} else if (WIFSTOPPED(status))
