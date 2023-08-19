@@ -5,10 +5,10 @@
   when a syscall is interrupted by a signal and SA\_RESTART flag is set (the
   syscall restarts). More generally, handle errno values for failing syscalls
   (depending on the return type I guess...)
-- update the return types for some calls, like mmap or brk who return a pointer
 - implement the other options/bonuses
 - cleanup the events.c code a little bit and add some comments to clarify all
-  this because this is not very very clear as is
+  this because this is not very very clear as is (also clean main... and the
+  entire code base why not?)
 - test the shit out of this ft\_strace (make sure every edge case is handled)
 - handle functions that dont return (right now exit returns the value of syscall
   entry for example), maybe replace their return type by TNONE and force 0 on
