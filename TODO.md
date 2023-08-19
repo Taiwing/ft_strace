@@ -1,6 +1,5 @@
 --- TODO ---
 
-- also 'add <syscall> resumed... thing'
 - see what's going on the the restart\_syscall thing
 - handle ERESTARTSYS ERESTARTNOINTR and ERESTARTNOHAND (show '?' as a return
   value and print the ERESTART* value after it like the original). It happens
