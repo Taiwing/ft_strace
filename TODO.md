@@ -1,5 +1,6 @@
 --- TODO ---
 
+- remove cfg parameter wherever it is since it is a global variable now
 - handle ERESTARTSYS ERESTARTNOINTR and ERESTARTNOHAND (show '?' as a return
   value and print the ERESTART* value after it like the original). It happens
   when a syscall is interrupted by a signal and SA\_RESTART flag is set (the
@@ -10,9 +11,6 @@
   this because this is not very very clear as is (also clean main... and the
   entire code base why not?)
 - test the shit out of this ft\_strace (make sure every edge case is handled)
-- handle functions that dont return (right now exit returns the value of syscall
-  entry for example), maybe replace their return type by TNONE and force 0 on
-  TNONE syscalls (if thats what it does)
 
 -- find syscalls --
 
