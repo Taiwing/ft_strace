@@ -26,11 +26,13 @@ static void	print_regset_32(t_st_config *cfg, t_user_regs_32 *regs)
 static void	print_syscall_exit_32(t_user_regs_32 *regs,
 	const t_syscall *syscall)
 {
-	int	i;
+	int					i;
+	uint32_t			size;
+	enum e_syscall_type	type;
 
 	if (!syscall)
 	{
-		stprintf(NULL, ") = %d\n", regs->eax);
+		stprintf(NULL, ") = %ld\n", regs->eax);
 		return ;
 	}
 	for (i = 0; i < SYSCALL_MAX_PARAMETERS
@@ -39,20 +41,32 @@ static void	print_syscall_exit_32(t_user_regs_32 *regs,
 	for (; i < SYSCALL_MAX_PARAMETERS
 		&& syscall->parameter_type[i] != TNONE; ++i)
 	{
-		if (i != 0)
-			stprintf(NULL, ", ");
-		stprintf(NULL, "%#x", REGS_32_ARRAY(regs, i));
+		size = 0;
+		type = syscall->parameter_type[i];
+		if (type == TSCHAR)
+			size = REGS_32_ARRAY(regs, (i + 1));
+		else if (type == TWSCHAR)
+			size = (int32_t)regs->eax < 0 ? 0 : regs->eax;
+		else if (type == TWSTR && regs->eax != 0)
+			size = regs->eax;
+		else if (type == TWSTR)
+			type = TPTR;
+		print_parameter(!!i, type, REGS_32_ARRAY(regs, i), size);
 	}
-	stprintf(NULL, ") = %d\n", regs->eax);
+	stprintf(NULL, ") = ");
+	print_parameter(0, syscall->return_type, regs->eax, 0);
+	stprintf(NULL, "\n");
 }
 
 static void	print_syscall_entry_32(t_st_config *cfg, t_st_process *process,
 	t_user_regs_32 *regs, const t_syscall *syscall)
 {
+	uint32_t	size;
+
 	if (!syscall)
 	{
 		print_regset_32(cfg, regs); //DEBUG
-		stprintf(cfg, "unknown_syscall_%#x(", process->current_syscall);
+		stprintf(cfg, "unknown_syscall_%#lx(", process->current_syscall);
 		return ;
 	}
 	stprintf(cfg, "%s(", syscall->name);
@@ -60,9 +74,10 @@ static void	print_syscall_entry_32(t_st_config *cfg, t_st_process *process,
 		&& !IS_WAIT_TYPE(syscall->parameter_type[i])
 		&& syscall->parameter_type[i] != TNONE; ++i)
 	{
-		if (i != 0)
-			stprintf(NULL, ", ");
-		stprintf(NULL, "%#x", REGS_32_ARRAY(regs, i));
+		size = syscall->parameter_type[i] == TSCHAR ?
+			REGS_32_ARRAY(regs, (i + 1)) : 0;
+		print_parameter(!!i, syscall->parameter_type[i],
+			REGS_32_ARRAY(regs, i), size);
 	}
 }
 
