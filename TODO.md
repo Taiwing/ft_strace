@@ -1,7 +1,7 @@
 --- TODO ---
 
-- see what's going on the the restart\_syscall thing
 - implement the other options/bonuses
+
 - cleanup the events.c code a little bit and add some comments to clarify all
   this because this is not very very clear as is (also clean main... and the
   entire code base why not?)

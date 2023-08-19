@@ -20,6 +20,9 @@ void	get_syscall(t_st_process *process)
 	if (process->arch == E_ARCH_UNKNOWN)
 		errx(EXIT_FAILURE, "Unknown architecture");
 	if (!process->in_syscall)
+	{
+		process->last_syscall = process->current_syscall;
 		process->current_syscall = process->arch == E_ARCH_32
 			? process->regs.regs32.orig_eax : process->regs.regs64.orig_rax;
+	}
 }

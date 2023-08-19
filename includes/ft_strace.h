@@ -36,7 +36,8 @@ typedef struct		s_st_process
 	sig_atomic_t	running;				// process is running
 	int				in_syscall;				// process is in syscall
 	int				current_syscall;		// current syscall number
-	int				interrupted_syscall;	// syscall was interrupted
+	int				interrupted;			// syscall was interrupted
+	int				last_syscall;			// last syscall number
 	int				arch_changed;			// architecture changed
 }					t_st_process;
 
@@ -106,3 +107,4 @@ void			print_signal(t_st_config *cfg,
 					unsigned int sig, unsigned int stopped, siginfo_t *si);
 void			print_parameter(int comma, enum e_syscall_type type,
 					uint64_t param, uint64_t size);
+void			print_restart_syscall(int syscall, enum e_arch arch);

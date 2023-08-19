@@ -27,6 +27,20 @@ int		stprintf(t_st_config *cfg, const char *format, ...)
 	return (ret);
 }
 
+void	print_restart_syscall(int syscall, enum e_arch arch)
+{
+	const char	*name = NULL;
+
+	if (arch == E_ARCH_32 && syscall >= 0 && syscall < G_SYSCALL_X86_I386
+		&& g_syscall_x86_i386[syscall].name)
+		name = g_syscall_x86_i386[syscall].name;
+	else if (arch == E_ARCH_64 && syscall >= 0 && syscall < G_SYSCALL_X86_64
+		&& g_syscall_x86_64[syscall].name)
+		name = g_syscall_x86_64[syscall].name;
+	stprintf(NULL, "<... resuming interrupted %s ...>",
+		name ? name : "system call");
+}
+
 void	print_signal(t_st_config *cfg,
 	unsigned int sig, unsigned int stopped, siginfo_t *si)
 {
@@ -55,7 +69,7 @@ void	print_syscall(t_st_config *cfg)
 	else
 		print_syscall_64(cfg);
 	cfg->current_process->in_syscall = !cfg->current_process->in_syscall;
-	cfg->current_process->interrupted_syscall = 0;
+	cfg->current_process->interrupted = 0;
 	if (cfg->current_process->arch_changed && !cfg->current_process->in_syscall)
 	{
 		stprintf(cfg, "[ Process PID=%5u runs in %d bit mode. ]\n",

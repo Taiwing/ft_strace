@@ -124,10 +124,14 @@ void	print_syscall_32(t_st_config *cfg)
 		&& !!g_syscall_x86_i386[process->current_syscall].name)
 		syscall = &g_syscall_x86_i386[process->current_syscall];
 	if (!process->in_syscall)
+	{
 		print_syscall_entry_32(cfg, process, regs, syscall);
-	else if (process->interrupted_syscall && syscall)
+		if (process->current_syscall == 0)
+			print_restart_syscall(process->last_syscall, E_ARCH_32);
+	}
+	else if (process->interrupted && syscall)
 		stprintf(cfg, "<... %s resumed>", syscall->name);
-	else if (process->interrupted_syscall)
+	else if (process->interrupted)
 		stprintf(cfg, "<... unknown_syscall_%lx resumed>",
 			process->current_syscall);
 	if (process->in_syscall)
