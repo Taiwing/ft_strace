@@ -86,6 +86,11 @@ static size_t	print_str(int comma, uint64_t param)
 	size_t		size;
 	char		buf[STR_MAX + 1];
 
+	if (!param)
+	{
+		stprintf(NULL, "%sNULL", comma ? ", " : "");
+		return (0);
+	}
 	size = process_peekstr(g_cfg->current_process->pid, (void *)param,
 		buf, STR_MAX + 1);
 	stprintf(NULL, "%s\"%.*s\"%s", comma ? ", " : "", (int)size, buf,
@@ -104,17 +109,22 @@ static void		print_str_array(int comma, uint64_t param)
 	while (1)
 	{
 		addr = ptrace(PTRACE_PEEKDATA, g_cfg->current_process->pid, param, 0);
+		if (addr || !comma)
+			print_str(comma, addr);
 		if (!addr)
-		{
-			if (!comma)
-				stprintf(NULL, "NULL");
 			break ;
-		}
-		print_str(comma, addr);
 		comma = 1;
 		param += sizeof(addr);
 	}
 	stprintf(NULL, "]");
+}
+
+static void		print_ptr(int comma, uint64_t param)
+{
+	if (param)
+		stprintf(NULL, "%s%p", comma ? ", " : "", param);
+	else
+		stprintf(NULL, "%sNULL", comma ? ", " : "");
 }
 
 void	print_parameter(int comma, enum e_syscall_type type,
@@ -128,7 +138,7 @@ void	print_parameter(int comma, enum e_syscall_type type,
 		case TUSHRT:
 		case TUINT:
 		case TLUINT: stprintf(NULL, "%s%lu", comma ? ", " : "", param);	break;
-		case TPTR: stprintf(NULL, "%s%p", comma ? ", " : "", param);	break;
+		case TPTR: print_ptr(comma, param);								break;
 		case TSTR:
 		case TWSTR: print_str(comma, param);							break;
 		case TSCHAR:
