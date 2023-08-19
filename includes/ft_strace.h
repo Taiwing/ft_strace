@@ -60,6 +60,28 @@ typedef struct		s_st_config
 extern t_st_config	*g_cfg;
 
 /*
+** error codes that should be defined in errno.h
+*/
+#ifndef ERESTARTSYS
+# define ERESTARTSYS 512
+#endif
+#ifndef ERESTARTNOINTR
+# define ERESTARTNOINTR 513
+#endif
+#ifndef ERESTARTNOHAND
+# define ERESTARTNOHAND 514
+#endif
+#ifndef ERESTART_RESTARTBLOCK
+# define ERESTART_RESTARTBLOCK 516
+#endif
+
+/*
+** Their names and descriptions
+*/
+extern const char	*g_erestart_name[];
+extern const char	*g_erestart_desc[];
+
+/*
 ** functions
 */
 size_t			parse_pid_list(t_st_process *dest, char *pid_argument);

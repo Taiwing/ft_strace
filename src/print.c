@@ -1,5 +1,19 @@
 #include "ft_strace.h"
 
+const char	*g_erestart_name[] = {
+	[ERESTARTSYS] = "ERESTARTSYS",
+	[ERESTARTNOINTR] = "ERESTARTNOINTR",
+	[ERESTARTNOHAND] = "ERESTARTNOHAND",
+	[ERESTART_RESTARTBLOCK] = "ERESTART_RESTARTBLOCK",
+};
+
+const char	*g_erestart_desc[] = {
+	[ERESTARTSYS] = "To be restarted if SA_RESTART is set",
+	[ERESTARTNOINTR] = "To be restarted",
+	[ERESTARTNOHAND] = "To be restarted if no handler",
+	[ERESTART_RESTARTBLOCK] = "Interrupted by signal",
+};
+
 int		stprintf(t_st_config *cfg, const char *format, ...)
 {
 	va_list		args;
