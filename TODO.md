@@ -1,6 +1,5 @@
 --- TODO ---
 
-- print each type differently according to the syscall parameter types
 - handle ERESTARTSYS ERESTARTNOINTR and ERESTARTNOHAND (show '?' as a return
   value and print the ERESTART* value after it like the original). It happens
   when a syscall is interrupted by a signal and SA\_RESTART flag is set (the
