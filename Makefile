@@ -23,6 +23,7 @@ SRCC			=	syscall.c\
 					print_syscall_32.c\
 					signals.c\
 					options.c\
+					print_parameters.c\
 
 ODIR			=	obj
 OBJ				=	$(patsubst %.c,%.o,$(SRCC))
@@ -51,6 +52,7 @@ find_command.o: ft_strace.h syscall.h
 print_syscall_32.o: ft_strace.h syscall.h
 signals.o: ft_strace.h syscall.h
 options.o: ft_strace.h syscall.h
+print_parameters.o: ft_strace.h syscall.h
 %.o: %.c
 	@mkdir -p $(ODIR)
 	$(CC) -c $(CFLAGS) $< $(HFLAGS) -o $(ODIR)/$@
