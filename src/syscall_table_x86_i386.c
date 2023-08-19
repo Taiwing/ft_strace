@@ -2,7 +2,7 @@
 
 const t_syscall	g_syscall_x86_i386[G_SYSCALL_X86_I386]= {
 	[0] = { "restart_syscall", TLINT, { TNONE, TNONE, TNONE, TNONE, TNONE, TNONE } },
-	[1] = { "exit", TLINT, { TINT, TNONE, TNONE, TNONE, TNONE, TNONE } },
+	[1] = { "exit", TNONE, { TINT, TNONE, TNONE, TNONE, TNONE, TNONE } },
 	[2] = { "fork", TLINT, { TNONE, TNONE, TNONE, TNONE, TNONE, TNONE } },
 	[3] = { "read", TLINT, { TUINT, TWSCHAR, TLUINT, TNONE, TNONE, TNONE } },
 	[4] = { "write", TLINT, { TUINT, TSCHAR, TLUINT, TNONE, TNONE, TNONE } },
@@ -250,7 +250,7 @@ const t_syscall	g_syscall_x86_i386[G_SYSCALL_X86_I386]= {
 	[248] = { "io_submit", TLINT, { TLUINT, TLINT, TPTR, TNONE, TNONE, TNONE } },
 	[249] = { "io_cancel", TLINT, { TLUINT, TPTR, TPTR, TNONE, TNONE, TNONE } },
 	[250] = { "fadvise64", TLINT, { TINT, TLINT, TLUINT, TINT, TNONE, TNONE } },
-	[252] = { "exit_group", TLINT, { TINT, TNONE, TNONE, TNONE, TNONE, TNONE } },
+	[252] = { "exit_group", TNONE , { TINT, TNONE, TNONE, TNONE, TNONE, TNONE } },
 	[253] = { "lookup_dcookie", TLINT, { TLUINT, TWSCHAR, TLUINT, TNONE, TNONE, TNONE } },
 	[254] = { "epoll_create", TLINT, { TINT, TNONE, TNONE, TNONE, TNONE, TNONE } },
 	[255] = { "epoll_ctl", TLINT, { TINT, TINT, TINT, TPTR, TNONE, TNONE } },
