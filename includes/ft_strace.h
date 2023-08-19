@@ -37,6 +37,7 @@ typedef struct		s_st_process
 	int				in_syscall;				// process is in syscall
 	int				current_syscall;		// current syscall number
 	int				interrupted_syscall;	// syscall was interrupted
+	int				arch_changed;			// architecture changed
 }					t_st_process;
 
 /*

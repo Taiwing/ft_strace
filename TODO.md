@@ -1,6 +1,6 @@
 --- TODO ---
 
-- remove cfg parameter wherever it is since it is a global variable now
+- also 'add <syscall> resumed... thing'
 - see what's going on the the restart\_syscall thing
 - handle ERESTARTSYS ERESTARTNOINTR and ERESTARTNOHAND (show '?' as a return
   value and print the ERESTART* value after it like the original). It happens
@@ -8,11 +8,11 @@
   syscall restarts). More generally, handle errno values for failing syscalls
   (depending on the return type I guess...)
 - implement the other options/bonuses
-- add the little 'this process is in 32bit... blablabla' message
 - cleanup the events.c code a little bit and add some comments to clarify all
   this because this is not very very clear as is (also clean main... and the
   entire code base why not?)
 - test the shit out of this ft\_strace (make sure every edge case is handled)
+- remove cfg parameter wherever it is since it is a global variable now
 
 -- find syscalls --
 

@@ -42,4 +42,11 @@ void	print_syscall(t_st_config *cfg)
 		print_syscall_64(cfg);
 	cfg->current_process->in_syscall = !cfg->current_process->in_syscall;
 	cfg->current_process->interrupted_syscall = 0;
+	if (cfg->current_process->arch_changed && !cfg->current_process->in_syscall)
+	{
+		stprintf(cfg, "[ Process PID=%5u runs in %d bit mode. ]\n",
+			cfg->current_process->pid,
+			cfg->current_process->arch == E_ARCH_32 ? 32 : 64);
+		cfg->current_process->arch_changed = 0;
+	}
 }

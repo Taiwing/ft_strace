@@ -5,6 +5,7 @@
 
 void	get_syscall(t_st_process *process)
 {
+	enum e_arch		arch;
 	struct iovec	io = {
 		.iov_base = &process->regs,
 		.iov_len = sizeof(process->regs),
@@ -12,7 +13,10 @@ void	get_syscall(t_st_process *process)
 
 	if (ptrace(PTRACE_GETREGSET, process->pid, NT_PRSTATUS, &io) < 0)
 		err(EXIT_FAILURE, "ptrace");
-	process->arch = GET_ARCH(io.iov_len);
+	arch = GET_ARCH(io.iov_len);
+	if (arch != process->arch && process->arch != E_ARCH_UNKNOWN)
+		process->arch_changed = 1;
+	process->arch = arch;
 	if (process->arch == E_ARCH_UNKNOWN)
 		errx(EXIT_FAILURE, "Unknown architecture");
 	if (!process->in_syscall)
