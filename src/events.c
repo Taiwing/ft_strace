@@ -73,7 +73,8 @@ void		process_event_loop(t_st_config *cfg)
 			if (cfg->current_process == cfg->child_process)
 				cfg->exit_code = WEXITSTATUS(status);
 		} else if (WIFSIGNALED(status)) {
-			if (cfg->current_process->in_syscall)
+			if (cfg->current_process->in_syscall
+				&& !cfg->current_process->interrupted_syscall)
 				stprintf(NULL, " <unfinished ...>\n");
 			stprintf(cfg, "+++ killed by %s %s+++\n", signame(WTERMSIG(status)),
 				WCOREDUMP(status) ? "(core dumped) " : "");
