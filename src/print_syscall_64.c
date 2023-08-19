@@ -36,7 +36,9 @@ static void	print_regset_64(t_st_config *cfg, t_user_regs_64 *regs)
 static void	print_syscall_exit_64(t_user_regs_64 *regs,
 	const t_syscall *syscall)
 {
-	int	i;
+	int					i;
+	uint64_t			size;
+	enum e_syscall_type	type;
 
 	if (!syscall)
 	{
@@ -49,16 +51,28 @@ static void	print_syscall_exit_64(t_user_regs_64 *regs,
 	for (; i < SYSCALL_MAX_PARAMETERS
 		&& syscall->parameter_type[i] != TNONE; ++i)
 	{
-		if (i != 0)
-			stprintf(NULL, ", ");
-		stprintf(NULL, "%#lx", REGS_64_ARRAY(regs, i));
+		size = 0;
+		type = syscall->parameter_type[i];
+		if (type == TSCHAR)
+			size = REGS_64_ARRAY(regs, (i + 1));
+		else if (type == TWSCHAR)
+			size = (int64_t)regs->rax < 0 ? 0 : regs->rax;
+		else if (type == TWSTR && regs->rax != 0)
+			size = regs->rax;
+		else if (type == TWSTR)
+			type = TPTR;
+		print_parameter(!!i, type, REGS_64_ARRAY(regs, i), size);
 	}
-	stprintf(NULL, ") = %ld\n", regs->rax);
+	stprintf(NULL, ") = ");
+	print_parameter(0, syscall->return_type, regs->rax, 0);
+	stprintf(NULL, "\n");
 }
 
 static void	print_syscall_entry_64(t_st_config *cfg, t_st_process *process,
 	t_user_regs_64 *regs, const t_syscall *syscall)
 {
+	uint64_t	size;
+
 	if (!syscall)
 	{
 		print_regset_64(cfg, regs); //DEBUG
@@ -70,9 +84,10 @@ static void	print_syscall_entry_64(t_st_config *cfg, t_st_process *process,
 		&& !IS_WAIT_TYPE(syscall->parameter_type[i])
 		&& syscall->parameter_type[i] != TNONE; ++i)
 	{
-		if (i != 0)
-			stprintf(NULL, ", ");
-		stprintf(NULL, "%#lx", REGS_64_ARRAY(regs, i));
+		size = syscall->parameter_type[i] == TSCHAR ?
+			REGS_64_ARRAY(regs, (i + 1)) : 0;
+		print_parameter(!!i, syscall->parameter_type[i],
+			REGS_64_ARRAY(regs, i), size);
 	}
 }
 

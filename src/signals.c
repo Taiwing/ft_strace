@@ -1,4 +1,23 @@
 #include "ft_strace.h"
+#include <string.h>
+#include <signal.h>
+
+char	*signame(int sig)
+{
+	int			ret;
+	static char	buf[32];
+	const char	*abbrev = sigabbrev_np(sig);
+
+	if (abbrev)
+		ret = snprintf(buf, sizeof(buf), "SIG%s", abbrev);
+	else if (sig == SIGRTMIN)
+		ret = snprintf(buf, sizeof(buf), "SIGRTMIN");
+	else if (sig > SIGRTMIN && sig <= SIGRTMAX)
+		ret = snprintf(buf, sizeof(buf), "SIGRT_%d", sig - SIGRTMIN);
+	else
+		ret = snprintf(buf, sizeof(buf), "Unknown Signal %d", sig);
+	return (ret < 0 ? NULL : buf);
+}
 
 void		unblock_signals(void)
 {
