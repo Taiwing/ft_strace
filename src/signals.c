@@ -35,6 +35,14 @@ void		block_signals(sigset_t *blocked)
 		err(EXIT_FAILURE, "sigprocmask");
 }
 
+void		signal_exit(t_st_config *cfg)
+{
+	cfg->exit_code &= 0xff;
+	signal(cfg->exit_code, SIG_DFL);
+	raise(cfg->exit_code);
+	cfg->exit_code |= 0x80;
+}
+
 static void	sigint_handler(int sig)
 {
 	if (g_cfg->child_process && g_cfg->child_process->running)

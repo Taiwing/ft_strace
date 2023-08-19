@@ -88,6 +88,7 @@ extern const char	*g_erestart_desc[];
 size_t			parse_pid_list(t_st_process *dest, char *pid_argument);
 char			**parse_options(t_st_config *cfg,  int argc, char **argv);
 void			set_signals(sigset_t *blocked);
+void			signal_exit(t_st_config *cfg);
 void			unblock_signals(void);
 void			block_signals(sigset_t *blocked);
 pid_t			st_waitpid(t_st_config *cfg, pid_t pid,
