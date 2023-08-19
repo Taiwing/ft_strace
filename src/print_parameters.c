@@ -93,45 +93,46 @@ static size_t	print_str(int comma, uint64_t param)
 	return (size > STR_MAX ? STR_MAX : size);
 }
 
+static void		print_str_array(int comma, uint64_t param)
+{
+	uint64_t	addr;
+
+	stprintf(NULL, "%s%s", comma ? ", " : "", param ? "[" : "NULL");
+	if (!param)
+		return ;
+	comma = 0;
+	while (1)
+	{
+		addr = ptrace(PTRACE_PEEKDATA, g_cfg->current_process->pid, param, 0);
+		if (!addr)
+		{
+			if (!comma)
+				stprintf(NULL, "NULL");
+			break ;
+		}
+		print_str(comma, addr);
+		comma = 1;
+		param += sizeof(addr);
+	}
+	stprintf(NULL, "]");
+}
+
 void	print_parameter(int comma, enum e_syscall_type type,
 	uint64_t param, uint64_t size)
 {
-	//TODO: create dedicated functions for string, buffer and array printing
-	//so that the output can be abrideged when it is deemed too long
 	switch (type)
 	{
-		case TNONE:
-			break;
+		case TNONE: stprintf(NULL, "%s?", comma ? ", " : "");			break;
 		case TINT:
-		case TLINT:
-			stprintf(NULL, "%s%ld", comma ? ", " : "", param);
-			break;
+		case TLINT: stprintf(NULL, "%s%ld", comma ? ", " : "", param);	break;
 		case TUSHRT:
 		case TUINT:
-		case TLUINT:
-			stprintf(NULL, "%s%lu", comma ? ", " : "", param);
-			break;
-		case TPTR:
-			stprintf(NULL, "%s%p", comma ? ", " : "", param);
-			break;
+		case TLUINT: stprintf(NULL, "%s%lu", comma ? ", " : "", param);	break;
+		case TPTR: stprintf(NULL, "%s%p", comma ? ", " : "", param);	break;
 		case TSTR:
-		case TWSTR:
-			print_str(comma, param);
-			break;
+		case TWSTR: print_str(comma, param);							break;
 		case TSCHAR:
-		case TWSCHAR:
-			print_buf(comma, param, size);
-			break;
-		/*
-		case TASTR:
-			stprintf(NULL, "%s[", comma ? ", " : "");
-			char **p = (char **)param;
-			for (int i = 0; p && p[i]; ++i)
-				stprintf(NULL, "%s\"%s\"", !!i ? ", " : "", p[i]);
-			break;
-		*/
-		default:
-			stprintf(NULL, "%s%p", comma ? ", " : "", param);
-			break;
+		case TWSCHAR: print_buf(comma, param, size);					break;
+		case TASTR: print_str_array(comma, param);						break;
 	}
 }
