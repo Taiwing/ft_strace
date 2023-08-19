@@ -40,7 +40,7 @@ static void	print_return_value(uint64_t value, enum e_syscall_type type)
 	int64_t		svalue = (int64_t)value;
 
 	stprintf(NULL, ") = ");
-	if (type != TLINT || svalue >= 0)
+	if (type == TNONE || value < (uint64_t)-MAX_ERRNO)
 	{
 		print_parameter(0, type, value, 0);
 		stprintf(NULL, "\n");
@@ -53,13 +53,14 @@ static void	print_return_value(uint64_t value, enum e_syscall_type type)
 		case ERESTARTNOINTR:
 		case ERESTARTNOHAND:
 		case ERESTART_RESTARTBLOCK:
-			type = TNONE;
 			errname = g_erestart_name[svalue];
 			errdesc = g_erestart_desc[svalue];
+			type = TNONE;
 			break ;
 		default:
 			errname = strerrorname_np(svalue);
 			errdesc = strerror(svalue);
+			type = TLINT;
 			svalue = -1;
 			break ;
 	}

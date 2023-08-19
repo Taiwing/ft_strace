@@ -63,6 +63,9 @@ extern t_st_config	*g_cfg;
 /*
 ** error codes that should be defined in errno.h
 */
+#ifndef MAX_ERRNO
+# define MAX_ERRNO 4095
+#endif
 #ifndef ERESTARTSYS
 # define ERESTARTSYS 512
 #endif
