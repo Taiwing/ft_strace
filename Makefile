@@ -16,8 +16,8 @@ SRCC			=	syscall.c\
 					syscall_table_x86_64.c\
 					syscall_table_x86_i386.c\
 					pid.c\
-					events.c\
 					execute_command.c\
+					wait.c\
 					print_syscall_64.c\
 					find_command.c\
 					print_syscall_32.c\
@@ -45,8 +45,8 @@ print.o: ft_strace.h syscall.h
 syscall_table_x86_64.o: syscall.h
 syscall_table_x86_i386.o: syscall.h
 pid.o: ft_strace.h syscall.h
-events.o: ft_strace.h syscall.h
 execute_command.o: ft_strace.h syscall.h
+wait.o: ft_strace.h syscall.h
 print_syscall_64.o: ft_strace.h syscall.h
 find_command.o: ft_strace.h syscall.h
 print_syscall_32.o: ft_strace.h syscall.h

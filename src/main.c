@@ -48,7 +48,7 @@ int			main(int argc, char **argv)
 	if (!cfg.running_processes)
 		return (EXIT_FAILURE);
 	set_signals(&cfg.blocked);
-	process_event_loop(&cfg);
+	wait_processes(&cfg);
 	if (cfg.exit_code > 0xff)
 		signal_exit(&cfg);
 	return (cfg.exit_code);

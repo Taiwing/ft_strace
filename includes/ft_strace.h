@@ -100,7 +100,7 @@ char			*find_command(char *cmd_name);
 pid_t			execute_command(t_st_config *cfg, char *command, char **argv);
 int				trace_process(t_st_config *cfg, pid_t pid);
 t_st_process	*find_process(t_st_config *cfg, pid_t pid);
-void			process_event_loop(t_st_config *cfg);
+void			wait_processes(t_st_config *cfg);
 char			*signame(int sig);
 int				stprintf(t_st_config *cfg, const char *format, ...);
 void			get_syscall(t_st_process *process);
