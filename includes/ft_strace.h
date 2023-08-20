@@ -48,10 +48,12 @@ typedef struct		s_st_process
 typedef struct		s_st_summary
 {
 	int				syscall;				// syscall number
+	uint64_t		calls;					// syscall count
+	uint64_t		errors;					// error count
 	struct timespec sstime;					// kernel start time
 	struct timespec stime;					// kernel total time
-	size_t			calls;					// syscall count
-	size_t			errors;					// error count
+	double			time;					// total syscall time (s)
+	uint64_t		avgtime;				// average syscall time (us)
 }					t_st_summary;
 
 /*
@@ -105,8 +107,9 @@ extern const char	*g_erestart_desc[];
 /*
 ** Time
 */
-#define NSEC_PER_SEC 1000000000L
-#define NSEC_PER_USEC 1000L
+#define NSEC_PER_SEC	1000000000L
+#define USEC_PER_SEC	1000000L
+#define NSEC_PER_USEC	1000L
 extern const struct timespec	g_ts_zero;
 
 /*
@@ -146,5 +149,7 @@ void			print_return_value(uint64_t value, enum e_syscall_type type,
 void			ts_add(struct timespec *dest, const struct timespec *src);
 void			ts_sub(struct timespec *dest, const struct timespec *src);
 int				ts_cmp(const struct timespec *a, const struct timespec *b);
+double			ts_to_second(const struct timespec *ts);
+double			ts_to_usec(const struct timespec *ts);
 void			timeval_to_timespec(struct timespec *dest,
 					const struct timeval *src);

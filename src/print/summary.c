@@ -3,9 +3,14 @@
 #include <sys/param.h>
 
 #define COL_COUNT 6
+#define STRLEN(s) (strlen(s))
 
 const char			*g_summary_columns[COL_COUNT] = {
 	"% time", "seconds", "usecs/call", "calls", "errors", "syscall"
+};
+
+const int	default_width[COL_COUNT] = {
+	[0] = 6, [1] = 11, [2] = 11, [3] = 9, [4] = 9, [5] = 7
 };
 
 static int			compare_summary(const void *a, const void *b)
@@ -33,24 +38,18 @@ static void			get_summary_data(int *width, uint64_t *total,
 	t_st_summary *summary, size_t size, const t_syscall *syscalls)
 {
 	char		*name;
-	//double		seconds;
+	double		seconds = 0;
 	char		bufname[256];
-	//uint64_t	usecs, calls, errors;
-	uint64_t	calls, errors;
 
 	total[0] = 100;
-	total[1] = total[2] = 0;
+	total[1] = 0;
 	for (size_t i = 0; i < size && summary[i].calls; ++i)
 	{
-		//seconds = (double)summary[i].time.tv_sec
-		//	+ (double)summary[i].time.tv_nsec / NSEC_PER_SEC;
-		//usecs = summary[i].time.tv_sec * 1000000 + summary[i].time.tv_nsec / NSEC_PER_USEC;
-		calls = summary[i].calls;
-		errors = summary[i].errors;
-		//width[1] = MAX(width[1], ft_nbrlen((uint64_t)seconds, 10));
-		//width[2] = MAX(width[2], ft_nbrlen(usecs / calls, 10));
-		width[3] = MAX(width[3], intlen(calls));
-		width[4] = MAX(width[4], intlen(errors));
+		summary[i].time = ts_to_second(&summary[i].stime);
+		summary[i].avgtime =
+			(uint64_t)ts_to_usec(&summary[i].stime) / summary[i].calls;
+		width[3] = MAX(width[3], intlen(summary[i].calls));
+		width[4] = MAX(width[4], intlen(summary[i].errors));
 		if (syscalls[summary[i].syscall].name)
 			name = syscalls[summary[i].syscall].name;
 		else
@@ -60,9 +59,11 @@ static void			get_summary_data(int *width, uint64_t *total,
 				"unknown(%d)", summary[i].syscall);
 		}
 		width[5] = MAX(width[5], strlen(name) + 1);
-		total[3] += calls;
-		total[4] += errors;
+		seconds += summary[i].time;
+		total[3] += summary[i].calls;
+		total[4] += summary[i].errors;
 	}
+	total[2] = (uint64_t)(seconds * USEC_PER_SEC) / total[3];
 }
 
 static void			print_separator(int *width)
@@ -78,16 +79,10 @@ static void			print_separator(int *width)
 static void			print_summary_table(t_st_summary *summary, size_t size,
 	const t_syscall *syscalls)
 {
+	int			width[COL_COUNT] = { 0 };
 	uint64_t	total[COL_COUNT] = { 0 };
-	int			width[COL_COUNT] = {
-		[0] = strlen(g_summary_columns[0]),
-		[1] = strlen(g_summary_columns[1]) + 4,
-		[2] = strlen(g_summary_columns[2]) + 1,
-		[3] = strlen(g_summary_columns[3]) + 4,
-		[4] = strlen(g_summary_columns[4]) + 3,
-		[5] = strlen(g_summary_columns[5])
-	};
 
+	memcpy(width, default_width, sizeof(width));
 	qsort(summary, size, sizeof(t_st_summary), compare_summary);
 	get_summary_data(width, total, summary, size, syscalls);
 	stprintf(NULL, "%*s %*s %*s %*s %*s %s\n",
@@ -97,13 +92,11 @@ static void			print_summary_table(t_st_summary *summary, size_t size,
 	print_separator(width);
 	for (size_t i = 0; i < size && summary[i].calls; ++i)
 	{
-		uint64_t calls = summary[i].calls, errors = summary[i].errors;
-		double seconds = (double)summary[i].stime.tv_sec
-			+ (double)summary[i].stime.tv_nsec / NSEC_PER_SEC;
-		stprintf(NULL, "%*.2f %*.6f %*llu %*llu", width[0], 0.0,
-			width[1], seconds, width[2], 0ULL, width[3], calls);
-		if (errors)
-			stprintf(NULL, " %*llu", width[4], errors);
+		stprintf(NULL, "%*.2f %*.6f %*llu %*llu", width[0], 0.0, width[1],
+			summary[i].time, width[2], summary[i].avgtime,
+			width[3], summary[i].calls);
+		if (summary[i].errors)
+			stprintf(NULL, " %*llu", width[4], summary[i].errors);
 		else
 			stprintf(NULL, " %*s", width[4], "");
 		if (syscalls[summary[i].syscall].name)
@@ -112,8 +105,9 @@ static void			print_summary_table(t_st_summary *summary, size_t size,
 			stprintf(NULL, " unknown(%d)\n", summary[i].syscall);
 	}
 	print_separator(width);
-	stprintf(NULL, "%*.2f %*llu %*llu %*llu %*llu total\n", width[0], 100.0,
-		width[1], 0ULL, width[2], 0ULL, width[3], total[3], width[4], total[4]);
+	stprintf(NULL, "%*.2f %*llu %*llu %*llu %*llu total\n",
+		width[0], 100.0, width[1], total[1], width[2], total[2],
+		width[3], total[3], width[4], total[4]);
 }
 
 void				print_summary(t_st_config *cfg)

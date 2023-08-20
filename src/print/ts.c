@@ -31,7 +31,18 @@ int		ts_cmp(const struct timespec *a, const struct timespec *b)
 	return (a->tv_nsec - b->tv_nsec);
 }
 
-void timeval_to_timespec(struct timespec *dest, const struct timeval *src)
+double	ts_to_second(const struct timespec *ts)
+{
+	return ((double)ts->tv_sec + (double)ts->tv_nsec / NSEC_PER_SEC);
+}
+
+double	ts_to_usec(const struct timespec *ts)
+{
+	return ((double)ts->tv_sec * USEC_PER_SEC
+		+ (double)ts->tv_nsec / NSEC_PER_USEC);
+}
+
+void	timeval_to_timespec(struct timespec *dest, const struct timeval *src)
 {
 	dest->tv_sec = src->tv_sec;
 	dest->tv_nsec = src->tv_usec * NSEC_PER_USEC;
