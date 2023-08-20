@@ -50,8 +50,8 @@ typedef struct		s_st_summary
 	int				syscall;				// syscall number
 	uint64_t		calls;					// syscall count
 	uint64_t		errors;					// error count
-	struct timespec sstime;					// kernel start time
-	struct timespec stime;					// kernel total time
+	struct timespec start;					// kernel start time
+	struct timespec total;					// kernel total time
 	double			time;					// total syscall time (s)
 	uint64_t		avgtime;				// average syscall time (us)
 }					t_st_summary;

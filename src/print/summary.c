@@ -37,9 +37,9 @@ static int			compare_summary(const void *a, const void *b)
 
 	if (!sa->calls || !sb->calls)
 		return (sb->calls - sa->calls);
-	else if (sa->stime.tv_sec == sb->stime.tv_sec)
-		return (sb->stime.tv_nsec - sa->stime.tv_nsec);
-	return (sb->stime.tv_sec - sa->stime.tv_sec);
+	else if (sa->total.tv_sec == sb->total.tv_sec)
+		return (sb->total.tv_nsec - sa->total.tv_nsec);
+	return (sb->total.tv_sec - sa->total.tv_sec);
 }
 
 static int			intlen(uint64_t n)
@@ -60,9 +60,9 @@ static void			get_summary_data(int *width, t_summary_total *total,
 	total->time = 100.0;
 	for (size_t i = 0; i < size && summary[i].calls; ++i)
 	{
-		summary[i].time = ts_to_second(&summary[i].stime);
+		summary[i].time = ts_to_second(&summary[i].total);
 		summary[i].avgtime =
-			(uint64_t)ts_to_usec(&summary[i].stime) / summary[i].calls;
+			(uint64_t)ts_to_usec(&summary[i].total) / summary[i].calls;
 		width[3] = MAX(width[3], intlen(summary[i].calls));
 		width[4] = MAX(width[4], intlen(summary[i].errors));
 		if (syscalls[summary[i].syscall].name)

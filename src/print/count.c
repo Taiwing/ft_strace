@@ -35,9 +35,9 @@ void			count_syscall_exit(t_st_config *cfg, t_st_process *process)
 	++summary->calls;
 	summary->errors += syscall_error_return(return_value, process->arch);
 	timeval_to_timespec(&end, &cfg->rusage.ru_stime);
-	ts_sub(&end, &summary->sstime);
+	ts_sub(&end, &summary->start);
 	if (ts_cmp(&end, &g_ts_zero) >= 0)
-		ts_add(&summary->stime, &end);
+		ts_add(&summary->total, &end);
 }
 
 void			count_syscall_entry(t_st_config *cfg, t_st_process *process)
@@ -49,7 +49,7 @@ void			count_syscall_entry(t_st_config *cfg, t_st_process *process)
 		return ;
 	timeval_to_timespec(&start, &cfg->rusage.ru_stime);
 	if (ts_cmp(&start, &g_ts_zero) >= 0)
-		summary->sstime = start;
+		summary->start = start;
 }
 
 void			init_summary_count(t_st_config *cfg)
