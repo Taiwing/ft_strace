@@ -35,7 +35,10 @@ static void	spawn_child_process(t_st_config *cfg, char **args)
 void		terminate(void)
 {
 	if (g_cfg->summary)
+	{
+		stprintf(NULL, "\n");
 		print_summary(g_cfg);
+	}
 	if (g_cfg->exit_code > 0xff)
 	{
 		g_cfg->exit_code &= 0xff;
