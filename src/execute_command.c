@@ -5,7 +5,7 @@ static void	trace_child(t_st_config *cfg, pid_t pid)
 	int status;
 
 	// Wait for the child to stop.
-	st_waitpid(cfg, pid, &status, WUNTRACED);
+	st_wait(cfg, pid, &status, WUNTRACED);
 	if (!WIFSTOPPED(status) || WSTOPSIG(status) != SIGSTOP) {
 		kill(pid, SIGKILL);
 		error(EXIT_FAILURE, 0, "child did not stop");

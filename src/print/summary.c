@@ -16,7 +16,7 @@ static int			compare_summary(const void *a, const void *b)
 	if (!sa->calls || !sb->calls)
 		return (sb->calls - sa->calls);
 	else if (sa->time.tv_sec == sb->time.tv_sec)
-		return (sb->time.tv_nsec - sa->time.tv_nsec);
+		return (sb->time.tv_usec - sa->time.tv_usec);
 	return (sb->time.tv_sec - sa->time.tv_sec);
 }
 
@@ -43,8 +43,8 @@ static void			get_summary_data(int *width, uint64_t *total,
 	for (size_t i = 0; i < size && summary[i].calls; ++i)
 	{
 		//seconds = (double)summary[i].time.tv_sec
-		//	+ (double)summary[i].time.tv_nsec / 1000000000.0;
-		//usecs = summary[i].time.tv_sec * 1000000 + summary[i].time.tv_nsec / 1000;
+		//	+ (double)summary[i].time.tv_usec / 1000000000.0;
+		//usecs = summary[i].time.tv_sec * 1000000 + summary[i].time.tv_usec / 1000;
 		calls = summary[i].calls;
 		errors = summary[i].errors;
 		//width[1] = MAX(width[1], ft_nbrlen((uint64_t)seconds, 10));

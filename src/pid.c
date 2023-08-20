@@ -27,7 +27,7 @@ int				trace_process(t_st_config *cfg, pid_t pid)
 		err(EXIT_FAILURE, "ptrace");
 
 	// Wait for the process to stop.
-	st_waitpid(cfg, pid, &status, WUNTRACED);
+	st_wait(cfg, pid, &status, WUNTRACED);
 	if (!WIFSTOPPED(status))
 		error(EXIT_FAILURE, 0, "process did not stop");
 

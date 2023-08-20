@@ -12,6 +12,7 @@
 #include <stdarg.h>
 #include <sys/wait.h>
 #include <sys/ptrace.h>
+#include <sys/resource.h>
 
 #define MAX_PROCESS 1024
 
@@ -47,7 +48,7 @@ typedef struct		s_st_process
 typedef struct		s_st_summary
 {
 	int				syscall;				// syscall number
-	struct timespec	time;					// total time
+	struct timeval	time;					// total time
 	size_t			calls;					// syscall count
 	size_t			errors;					// error count
 }					t_st_summary;
@@ -66,9 +67,10 @@ typedef struct		s_st_config
 	t_st_process	*current_process;				// current event's process
 	t_st_process	*child_process;					// syscall process
 	int				arch_changed;					// architecture changed
-	int				exit_code;						// exit code
 	t_st_summary	summary_32[G_SYSCALL_X86_I386];	// 32 bit summary data
 	t_st_summary	summary_64[G_SYSCALL_X86_64];	// 64 bit summary data
+	struct rusage	rusage;							// resource usage
+	int				exit_code;						// exit code
 }					t_st_config;
 
 // global configuration
@@ -108,8 +110,7 @@ void			terminate(void);
 void			set_signals(sigset_t *blocked);
 void			unblock_signals(void);
 void			block_signals(sigset_t *blocked);
-pid_t			st_waitpid(t_st_config *cfg, pid_t pid,
-					int *status, int options);
+pid_t			st_wait(t_st_config *cfg, pid_t pid, int *status, int options);
 char			*find_command(char *cmd_name);
 pid_t			execute_command(t_st_config *cfg, char *command, char **argv);
 int				trace_process(t_st_config *cfg, pid_t pid);

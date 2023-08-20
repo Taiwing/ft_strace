@@ -1,4 +1,5 @@
 #include "ft_strace.h"
+#include <string.h>
 
 static void	restart_process(t_st_process *process,
 	unsigned int group_stop, int sig)
@@ -81,7 +82,7 @@ static void	set_current_process(t_st_config *cfg, pid_t pid)
 	t_st_process	*process;
 
 	if (!(process = find_process(cfg, pid)))
-		errx(EXIT_FAILURE, "waitpid: unknown pid %d", pid);
+		errx(EXIT_FAILURE, "wait4: unknown pid %d", pid);
 	else if (cfg->current_process && cfg->current_process != process
 		&& cfg->current_process->in_syscall)
 	{
@@ -92,15 +93,17 @@ static void	set_current_process(t_st_config *cfg, pid_t pid)
 	cfg->current_process = process;
 }
 
-pid_t		st_waitpid(t_st_config *cfg, pid_t pid, int *status, int options)
+pid_t		st_wait(t_st_config *cfg, pid_t pid, int *status, int options)
 {
-	pid_t	ret;
+	pid_t			ret;
+	struct rusage	rusage = {0};
 
 	unblock_signals();
-	while ((ret = waitpid(pid, status, options)) < 0 && errno == EINTR);
+	while ((ret = wait4(pid, status, options, &rusage)) < 0 && errno == EINTR);
 	if (ret < 0)
-		err(EXIT_FAILURE, "waitpid");
+		err(EXIT_FAILURE, "wait4");
 	block_signals(&cfg->blocked);
+	memcpy(&cfg->rusage, &rusage, sizeof(rusage));
 	return (ret);
 }
 
@@ -111,7 +114,7 @@ void		wait_processes(t_st_config *cfg)
 
 	while (cfg->running_processes)
 	{
-		pid = st_waitpid(cfg, -1, &status, __WALL);
+		pid = st_wait(cfg, -1, &status, __WALL);
 		set_current_process(cfg, pid);
 
 		if (WIFEXITED(status))
@@ -121,6 +124,6 @@ void		wait_processes(t_st_config *cfg)
 		else if (WIFSTOPPED(status))
 			process_stopped(cfg, status);
 		else
-			errx(EXIT_FAILURE, "waitpid: unknown status %x", status);
+			errx(EXIT_FAILURE, "wait4: unknown status %x", status);
 	}
 }
