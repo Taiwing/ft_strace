@@ -42,9 +42,9 @@ void	print_restart_syscall(int syscall, enum e_arch arch)
 }
 
 void	print_signal(t_st_config *cfg,
-	unsigned int sig, unsigned int stopped, siginfo_t *si)
+	unsigned int sig, unsigned int group_stop, siginfo_t *si)
 {
-	if (!stopped && si)
+	if (!group_stop && si)
 	{
 		if (si->si_code == SI_USER)
 			stprintf(cfg, "--- %s {si_signo=%s, si_code=SI_USER, si_pid=%d,"

@@ -2,8 +2,9 @@
 
 static void	process_stopped(t_st_config *cfg, int status)
 {
+	int				ret;
 	siginfo_t		siginfo;
-	unsigned int	stopped = 0, sig = WSTOPSIG(status),
+	unsigned int	group_stop = 0, sig = WSTOPSIG(status),
 					event = (unsigned int)status >> 16;
 
 	if (sig == (SIGTRAP | 0x80)) {
@@ -14,22 +15,22 @@ static void	process_stopped(t_st_config *cfg, int status)
 		if (event == PTRACE_EVENT_STOP && (sig == SIGSTOP || sig == SIGTSTP
 			|| sig == SIGTTIN || sig == SIGTTOU))
 		{
-			stopped = 1;
-			print_signal(cfg, sig, stopped, NULL);
+			group_stop = 1;
+			print_signal(cfg, sig, group_stop, NULL);
 		} else {
 			sig = 0;
 		}
 	} else {
-		stopped = (ptrace(PTRACE_GETSIGINFO, cfg->current_process->pid,
+		group_stop = (ptrace(PTRACE_GETSIGINFO, cfg->current_process->pid,
 			NULL, &siginfo) < 0);
-		print_signal(cfg, sig, stopped, stopped ? NULL : &siginfo);
+		print_signal(cfg, sig, group_stop, group_stop ? NULL : &siginfo);
 	}
 
-	if (stopped
-		&& ptrace(PTRACE_LISTEN, cfg->current_process->pid, NULL, NULL) < 0)
-		err(EXIT_FAILURE, "ptrace");
-	else if (!stopped
-		&& ptrace(PTRACE_SYSCALL, cfg->current_process->pid, NULL, sig) < 0)
+	if (group_stop)
+		ret = ptrace(PTRACE_LISTEN, cfg->current_process->pid, NULL, NULL);
+	else
+		ret = ptrace(PTRACE_SYSCALL, cfg->current_process->pid, NULL, sig);
+	if (ret < 0)
 		err(EXIT_FAILURE, "ptrace");
 }
 
