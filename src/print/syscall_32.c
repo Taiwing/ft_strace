@@ -30,7 +30,7 @@ static void	print_return_value_32(uint32_t value, enum e_syscall_type type)
 	int32_t		svalue = (int32_t)value;
 
 	stprintf(NULL, ") = ");
-	if (type == TNONE || value < (uint32_t)-MAX_ERRNO)
+	if (type == TNONE || !syscall_error_return(value, E_ARCH_32))
 	{
 		print_parameter(0, type, value, 0, E_ARCH_32);
 		stprintf(NULL, "\n");

@@ -40,7 +40,7 @@ static void	print_return_value_64(uint64_t value, enum e_syscall_type type)
 	int64_t		svalue = (int64_t)value;
 
 	stprintf(NULL, ") = ");
-	if (type == TNONE || value < (uint64_t)-MAX_ERRNO)
+	if (type == TNONE || !syscall_error_return(value, E_ARCH_64))
 	{
 		print_parameter(0, type, value, 0, E_ARCH_64);
 		stprintf(NULL, "\n");
