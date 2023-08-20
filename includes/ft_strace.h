@@ -63,6 +63,7 @@ typedef struct		s_st_config
 {
 	int				summary;						// -c and -C print summary
 	int				hide_output;					// -c hides regular output
+	int				kernel_time;					// -t print kernel time
 	sigset_t		blocked;						// signals to block
 	t_st_process	process_table[MAX_PROCESS];		// traced processes table
 	size_t			process_table_size;				// traced processes count
