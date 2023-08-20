@@ -13,7 +13,12 @@ int		syscall_error_return(uint64_t value, enum e_arch arch)
 void	update_process_syscall(t_st_process *process)
 {
 	if (g_cfg->summary)
-		count_syscall(g_cfg, process);
+	{
+		if (process->in_syscall)
+			count_syscall_exit(g_cfg, process);
+		else
+			count_syscall_entry(g_cfg, process);
+	}
 	process->in_syscall = !process->in_syscall;
 	process->interrupted = 0;
 	if (process->arch_changed && !process->in_syscall)

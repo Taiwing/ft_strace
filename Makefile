@@ -26,6 +26,7 @@ PRINTC			=	summary.c\
 					syscall_32.c\
 					parameters.c\
 					syscall_64.c\
+					ts.c\
 
 SYSCALLC		=	x86_i386.c\
 					x86_64.c\
@@ -58,6 +59,7 @@ utils.o: ft_strace.h syscall.h
 syscall_32.o: ft_strace.h syscall.h
 parameters.o: ft_strace.h syscall.h
 syscall_64.o: ft_strace.h syscall.h
+ts.o: ft_strace.h syscall.h
 find_command.o: ft_strace.h syscall.h
 signals.o: ft_strace.h syscall.h
 options.o: ft_strace.h syscall.h

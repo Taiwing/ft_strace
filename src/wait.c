@@ -1,5 +1,4 @@
 #include "ft_strace.h"
-#include <string.h>
 
 static void	restart_process(t_st_process *process,
 	unsigned int group_stop, int sig)
@@ -103,7 +102,7 @@ pid_t		st_wait(t_st_config *cfg, pid_t pid, int *status, int options)
 	if (ret < 0)
 		err(EXIT_FAILURE, "wait4");
 	block_signals(&cfg->blocked);
-	memcpy(&cfg->rusage, &rusage, sizeof(rusage));
+	cfg->rusage = rusage;
 	return (ret);
 }
 

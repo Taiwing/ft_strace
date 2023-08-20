@@ -15,9 +15,9 @@ static int			compare_summary(const void *a, const void *b)
 
 	if (!sa->calls || !sb->calls)
 		return (sb->calls - sa->calls);
-	else if (sa->time.tv_sec == sb->time.tv_sec)
-		return (sb->time.tv_usec - sa->time.tv_usec);
-	return (sb->time.tv_sec - sa->time.tv_sec);
+	else if (sa->stime.tv_sec == sb->stime.tv_sec)
+		return (sb->stime.tv_nsec - sa->stime.tv_nsec);
+	return (sb->stime.tv_sec - sa->stime.tv_sec);
 }
 
 static int			intlen(uint64_t n)
@@ -43,8 +43,8 @@ static void			get_summary_data(int *width, uint64_t *total,
 	for (size_t i = 0; i < size && summary[i].calls; ++i)
 	{
 		//seconds = (double)summary[i].time.tv_sec
-		//	+ (double)summary[i].time.tv_usec / 1000000000.0;
-		//usecs = summary[i].time.tv_sec * 1000000 + summary[i].time.tv_usec / 1000;
+		//	+ (double)summary[i].time.tv_nsec / NSEC_PER_SEC;
+		//usecs = summary[i].time.tv_sec * 1000000 + summary[i].time.tv_nsec / NSEC_PER_USEC;
 		calls = summary[i].calls;
 		errors = summary[i].errors;
 		//width[1] = MAX(width[1], ft_nbrlen((uint64_t)seconds, 10));
@@ -97,10 +97,11 @@ static void			print_summary_table(t_st_summary *summary, size_t size,
 	print_separator(width);
 	for (size_t i = 0; i < size && summary[i].calls; ++i)
 	{
-		uint64_t calls = summary[i].calls;
-		uint64_t errors = summary[i].errors;
+		uint64_t calls = summary[i].calls, errors = summary[i].errors;
+		double seconds = (double)summary[i].stime.tv_sec
+			+ (double)summary[i].stime.tv_nsec / NSEC_PER_SEC;
 		stprintf(NULL, "%*.2f %*.6f %*llu %*llu", width[0], 0.0,
-			width[1], 0.0, width[2], 0ULL, width[3], calls);
+			width[1], seconds, width[2], 0ULL, width[3], calls);
 		if (errors)
 			stprintf(NULL, " %*llu", width[4], errors);
 		else
@@ -131,8 +132,6 @@ static t_st_summary	*get_summary(t_st_config *cfg, t_st_process *process)
 	enum e_arch		arch;
 	int				syscall;
 
-	if (!process->in_syscall)
-		return (NULL);
 	if (process->arch_changed)
 	{
 		arch = process->arch == E_ARCH_32 ? E_ARCH_64 : E_ARCH_32;
@@ -150,8 +149,9 @@ static t_st_summary	*get_summary(t_st_config *cfg, t_st_process *process)
 		: &cfg->summary_64[syscall]);
 }
 
-void			count_syscall(t_st_config *cfg, t_st_process *process)
+void			count_syscall_exit(t_st_config *cfg, t_st_process *process)
 {
+	struct timespec	end;
 	t_st_summary	*summary;
 	uint64_t		return_value;
 
@@ -161,6 +161,22 @@ void			count_syscall(t_st_config *cfg, t_st_process *process)
 		: process->regs.regs64.rax;
 	++summary->calls;
 	summary->errors += syscall_error_return(return_value, process->arch);
+	timeval_to_timespec(&end, &cfg->rusage.ru_stime);
+	ts_sub(&end, &summary->sstime);
+	if (ts_cmp(&end, &g_ts_zero) >= 0)
+		ts_add(&summary->stime, &end);
+}
+
+void			count_syscall_entry(t_st_config *cfg, t_st_process *process)
+{
+	struct timespec	start;
+	t_st_summary	*summary;
+
+	if (!(summary = get_summary(cfg, process)))
+		return ;
+	timeval_to_timespec(&start, &cfg->rusage.ru_stime);
+	if (ts_cmp(&start, &g_ts_zero) >= 0)
+		summary->sstime = start;
 }
 
 void			init_summary(t_st_config *cfg)

@@ -48,7 +48,8 @@ typedef struct		s_st_process
 typedef struct		s_st_summary
 {
 	int				syscall;				// syscall number
-	struct timeval	time;					// total time
+	struct timespec sstime;					// kernel start time
+	struct timespec stime;					// kernel total time
 	size_t			calls;					// syscall count
 	size_t			errors;					// error count
 }					t_st_summary;
@@ -102,6 +103,13 @@ extern const char	*g_erestart_name[];
 extern const char	*g_erestart_desc[];
 
 /*
+** Time
+*/
+#define NSEC_PER_SEC 1000000000L
+#define NSEC_PER_USEC 1000L
+extern const struct timespec	g_ts_zero;
+
+/*
 ** functions
 */
 size_t			parse_pid_list(t_st_process *dest, char *pid_argument);
@@ -130,7 +138,13 @@ void			print_parameter(int comma, enum e_syscall_type type,
 void			print_restart_syscall(int syscall, enum e_arch arch);
 int				syscall_error_return(uint64_t value, enum e_arch arch);
 void			init_summary(t_st_config *cfg);
-void			count_syscall(t_st_config *cfg, t_st_process *process);
+void			count_syscall_entry(t_st_config *cfg, t_st_process *process);
+void			count_syscall_exit(t_st_config *cfg, t_st_process *process);
 void			print_summary(t_st_config *cfg);
 void			print_return_value(uint64_t value, enum e_syscall_type type,
 					enum e_arch arch);
+void			ts_add(struct timespec *dest, const struct timespec *src);
+void			ts_sub(struct timespec *dest, const struct timespec *src);
+int				ts_cmp(const struct timespec *a, const struct timespec *b);
+void			timeval_to_timespec(struct timespec *dest,
+					const struct timeval *src);
