@@ -1,5 +1,9 @@
 #include "ft_strace.h"
 
+#define ST_SYSCALLSTOP(sig)	((sig) == (SIGTRAP | 0x80))
+#define ST_STOPSIG(sig)		((sig) == SIGSTOP || (sig) == SIGTSTP \
+	|| (sig) == SIGTTIN || (sig) == SIGTTOU)
+
 static void	process_stopped(t_st_config *cfg, int status)
 {
 	int				ret;
@@ -7,13 +11,12 @@ static void	process_stopped(t_st_config *cfg, int status)
 	unsigned int	group_stop = 0, sig = WSTOPSIG(status),
 					event = (unsigned int)status >> 16;
 
-	if (sig == (SIGTRAP | 0x80)) {
+	if (ST_SYSCALLSTOP(sig)) {
 		get_syscall(cfg->current_process);
 		print_syscall(cfg);
 		sig = 0;
 	} else if (event) {
-		if (event == PTRACE_EVENT_STOP && (sig == SIGSTOP || sig == SIGTSTP
-			|| sig == SIGTTIN || sig == SIGTTOU))
+		if (event == PTRACE_EVENT_STOP && ST_STOPSIG(sig))
 		{
 			group_stop = 1;
 			print_signal(cfg, sig, group_stop, NULL);
