@@ -67,7 +67,7 @@ int			main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	set_signals(&cfg.blocked);
 	if (cfg.summary)
-		init_summary(&cfg);
+		init_summary_count(&cfg);
 	wait_processes(&cfg);
 	terminate();
 	return (cfg.exit_code);
