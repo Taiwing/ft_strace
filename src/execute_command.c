@@ -25,16 +25,12 @@ static void	child_process(char *command, char **argv)
 {
 	// Stop the child process so that the parent can trace it.
 	if (raise(SIGSTOP))
-	{
-		free(command);
 		err(EXIT_FAILURE, "raise");
-	}
 
 	// Execute the given command.
 	execvp(command, argv);
 
 	// Only reached if execvp() failed.
-	free(command);
 	err(EXIT_FAILURE, "'%s'", *argv);
 }
 
@@ -43,16 +39,10 @@ pid_t		execute_command(t_st_config *cfg, char *command, char **argv)
 	pid_t	pid = fork();
 
 	if (pid < 0)
-	{
-		free(command);
 		err(EXIT_FAILURE, "fork");
-	}
 	else if (pid == 0)
 		child_process(command, argv);
 	else
-	{
-		free(command);
 		trace_child(cfg, pid);
-	}
 	return (pid);
 }

@@ -39,8 +39,3 @@
 - write usage functions for both scripts
 
 -- find syscalls --
-
---- MAYBE ---
-
-- remove mallocs in the command building function so that we dont need
-  dynamic momory allocation anywhere

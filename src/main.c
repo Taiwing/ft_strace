@@ -28,6 +28,8 @@ static void	spawn_child_process(t_st_config *cfg, char **args)
 		cfg->child_process->running = 1;
 		++cfg->running_processes;
 	}
+	else
+		warnx("'%s': command not found", *args);
 }
 
 int			main(int argc, char **argv)
