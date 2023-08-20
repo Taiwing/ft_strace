@@ -28,7 +28,7 @@ PRINTC			=	utils.c\
 
 SYSCALLC		=	x86_i386.c\
 					x86_64.c\
-					get.c\
+					status.c\
 
 ODIR			=	obj
 OBJ				=	$(patsubst %.c,%.o,$(PRINTC))\
@@ -61,7 +61,7 @@ signals.o: ft_strace.h syscall.h
 options.o: ft_strace.h syscall.h
 x86_i386.o: syscall.h
 x86_64.o: syscall.h
-get.o: ft_strace.h syscall.h
+status.o: ft_strace.h syscall.h
 %.o: %.c
 	@mkdir -p $(ODIR)
 	$(CC) -c $(CFLAGS) $< $(HFLAGS) -o $(ODIR)/$@
