@@ -13,8 +13,8 @@ int				trace_process(t_st_config *cfg, pid_t pid)
 {
 	int	status;
 
-	// Seize running process.
-	if (ptrace(PTRACE_SEIZE, pid, NULL, NULL) < 0)
+	// Seize and interrupt running process.
+	if (ptrace(PTRACE_SEIZE, pid, NULL, PTRACE_O_TRACESYSGOOD) < 0)
 	{
 		if (errno == ESRCH || errno == EPERM)
 		{
@@ -23,8 +23,6 @@ int				trace_process(t_st_config *cfg, pid_t pid)
 		}
 		err(EXIT_FAILURE, "ptrace");
 	}
-
-	// Interrupt process.
 	if (ptrace(PTRACE_INTERRUPT, pid, NULL, NULL) < 0)
 		err(EXIT_FAILURE, "ptrace");
 
@@ -33,12 +31,7 @@ int				trace_process(t_st_config *cfg, pid_t pid)
 	if (!WIFSTOPPED(status))
 		error(EXIT_FAILURE, 0, "process did not stop");
 
-	// Set PTRACE_O_TRACESYSGOOD so that we can distinguish between
-	// a syscall induced event and a normal SIGTRAP.
-	if (ptrace(PTRACE_SETOPTIONS, pid, NULL, PTRACE_O_TRACESYSGOOD) < 0)
-		err(EXIT_FAILURE, "ptrace");
-
-	// Trace the process and resume execution.
+	// Resume execution.
 	if (ptrace(PTRACE_SYSCALL, pid, NULL, NULL) < 0)
 		err(EXIT_FAILURE, "ptrace");
 
