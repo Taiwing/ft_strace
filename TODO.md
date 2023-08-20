@@ -2,10 +2,6 @@
 
 - implement the other options/bonuses
 
-- cleanup the events.c code a little bit and add some comments to clarify all
-  this because this is not very very clear as is (also clean main... and the
-  entire code base why not?)
-- remove cfg parameter wherever it is since it is a global variable now
 - test the shit out of this ft\_strace (make sure every edge case is handled)
 - add doc and Dockerfile for sudo testing
 
