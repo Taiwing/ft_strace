@@ -21,7 +21,8 @@ SRCC			=	main.c\
 					signals.c\
 					options.c\
 
-PRINTC			=	utils.c\
+PRINTC			=	summary.c\
+					utils.c\
 					syscall_32.c\
 					parameters.c\
 					syscall_64.c\
@@ -52,6 +53,7 @@ main.o: ft_strace.h syscall.h
 pid.o: ft_strace.h syscall.h
 execute_command.o: ft_strace.h syscall.h
 wait.o: ft_strace.h syscall.h
+summary.o: ft_strace.h syscall.h
 utils.o: ft_strace.h syscall.h
 syscall_32.o: ft_strace.h syscall.h
 parameters.o: ft_strace.h syscall.h
