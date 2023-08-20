@@ -24,7 +24,7 @@ static void	print_regset_32(t_st_config *cfg, t_user_regs_32 *regs)
 	stprintf(NULL, "}\n");
 }
 
-static void	print_return_value(uint32_t value, enum e_syscall_type type)
+static void	print_return_value_32(uint32_t value, enum e_syscall_type type)
 {
 	const char	*errname, *errdesc;
 	int32_t		svalue = (int32_t)value;
@@ -32,7 +32,7 @@ static void	print_return_value(uint32_t value, enum e_syscall_type type)
 	stprintf(NULL, ") = ");
 	if (type == TNONE || value < (uint32_t)-MAX_ERRNO)
 	{
-		print_parameter(0, type, value, 0);
+		print_parameter(0, type, value, 0, E_ARCH_32);
 		stprintf(NULL, "\n");
 		return ;
 	}
@@ -54,7 +54,7 @@ static void	print_return_value(uint32_t value, enum e_syscall_type type)
 			svalue = -1;
 			break ;
 	}
-	print_parameter(0, type, svalue, 0);
+	print_parameter(0, type, svalue, 0, E_ARCH_32);
 	stprintf(NULL, " %s (%s)\n", errname, errdesc);
 }
 
@@ -86,9 +86,9 @@ static void	print_syscall_exit_32(t_user_regs_32 *regs,
 			size = regs->eax;
 		else if (type == TWSTR)
 			type = TPTR;
-		print_parameter(!!i, type, REGS_32_ARRAY(regs, i), size);
+		print_parameter(!!i, type, REGS_32_ARRAY(regs, i), size, E_ARCH_32);
 	}
-	print_return_value(regs->eax, syscall->return_type);
+	print_return_value_32(regs->eax, syscall->return_type);
 }
 
 static void	print_syscall_entry_32(t_st_config *cfg, t_st_process *process,
@@ -110,7 +110,7 @@ static void	print_syscall_entry_32(t_st_config *cfg, t_st_process *process,
 		size = syscall->parameter_type[i] == TSCHAR ?
 			REGS_32_ARRAY(regs, (i + 1)) : 0;
 		print_parameter(!!i, syscall->parameter_type[i],
-			REGS_32_ARRAY(regs, i), size);
+			REGS_32_ARRAY(regs, i), size, E_ARCH_32);
 	}
 }
 

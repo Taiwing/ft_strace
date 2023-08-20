@@ -110,5 +110,5 @@ void			print_syscall_64(t_st_config *cfg);
 void			print_signal(t_st_config *cfg,
 					unsigned int sig, unsigned int stopped, siginfo_t *si);
 void			print_parameter(int comma, enum e_syscall_type type,
-					uint64_t param, uint64_t size);
+					uint64_t param, uint64_t size, enum e_arch arch);
 void			print_restart_syscall(int syscall, enum e_arch arch);

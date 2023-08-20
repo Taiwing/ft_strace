@@ -98,7 +98,7 @@ static size_t	print_str(int comma, uint64_t param)
 	return (size > STR_MAX ? STR_MAX : size);
 }
 
-static void		print_str_array(int comma, uint64_t param)
+static void		print_str_array(int comma, uint64_t param, enum e_arch arch)
 {
 	uint64_t	addr;
 
@@ -109,12 +109,14 @@ static void		print_str_array(int comma, uint64_t param)
 	while (1)
 	{
 		addr = ptrace(PTRACE_PEEKDATA, g_cfg->current_process->pid, param, 0);
+		if (arch == E_ARCH_32)
+			addr = (uint32_t)addr;
 		if (addr || !comma)
 			print_str(comma, addr);
 		if (!addr)
 			break ;
 		comma = 1;
-		param += sizeof(addr);
+		param += arch == E_ARCH_32 ? sizeof(uint32_t) : sizeof(uint64_t);
 	}
 	stprintf(NULL, "]");
 }
@@ -127,8 +129,8 @@ static void		print_ptr(int comma, uint64_t param)
 		stprintf(NULL, "%sNULL", comma ? ", " : "");
 }
 
-void	print_parameter(int comma, enum e_syscall_type type,
-	uint64_t param, uint64_t size)
+void			print_parameter(int comma, enum e_syscall_type type,
+	uint64_t param, uint64_t size, enum e_arch arch)
 {
 	switch (type)
 	{
@@ -143,6 +145,6 @@ void	print_parameter(int comma, enum e_syscall_type type,
 		case TWSTR: print_str(comma, param);							break;
 		case TSCHAR:
 		case TWSCHAR: print_buf(comma, param, size);					break;
-		case TASTR: print_str_array(comma, param);						break;
+		case TASTR: print_str_array(comma, param, arch);				break;
 	}
 }
