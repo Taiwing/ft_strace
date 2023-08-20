@@ -24,8 +24,9 @@ static void	process_stopped(t_st_config *cfg, int status)
 					event = (unsigned int)status >> 16;
 
 	if (ST_SYSCALLSTOP(sig)) {
-		get_syscall(cfg->current_process);
+		get_process_syscall(cfg->current_process);
 		print_syscall(cfg);
+		update_process_syscall(cfg->current_process);
 		sig = 0;
 	} else if (event) {
 		if (event == PTRACE_EVENT_STOP && ST_STOPSIG(sig))
@@ -59,7 +60,10 @@ static void	process_killed(t_st_config *cfg, int status)
 static void	process_exited(t_st_config *cfg, int status)
 {
 	if (cfg->current_process->in_syscall)
+	{
 		print_syscall(cfg);
+		update_process_syscall(cfg->current_process);
+	}
 	stprintf(cfg, "+++ exited with %d +++\n", WEXITSTATUS(status));
 	cfg->current_process->running = 0;
 	--cfg->running_processes;
