@@ -1,12 +1,24 @@
 #include "ft_strace.h"
 
+static void	restart_process(t_st_process *process,
+	unsigned int group_stop, int sig)
+{
+	int	ret;
+
+	if (group_stop)
+		ret = ptrace(PTRACE_LISTEN, process->pid, NULL, NULL);
+	else
+		ret = ptrace(PTRACE_SYSCALL, process->pid, NULL, sig);
+	if (ret < 0)
+		err(EXIT_FAILURE, "ptrace");
+}
+
 #define ST_SYSCALLSTOP(sig)	((sig) == (SIGTRAP | 0x80))
 #define ST_STOPSIG(sig)		((sig) == SIGSTOP || (sig) == SIGTSTP \
 	|| (sig) == SIGTTIN || (sig) == SIGTTOU)
 
 static void	process_stopped(t_st_config *cfg, int status)
 {
-	int				ret;
 	siginfo_t		siginfo;
 	unsigned int	group_stop = 0, sig = WSTOPSIG(status),
 					event = (unsigned int)status >> 16;
@@ -28,13 +40,7 @@ static void	process_stopped(t_st_config *cfg, int status)
 			NULL, &siginfo) < 0);
 		print_signal(cfg, sig, group_stop, group_stop ? NULL : &siginfo);
 	}
-
-	if (group_stop)
-		ret = ptrace(PTRACE_LISTEN, cfg->current_process->pid, NULL, NULL);
-	else
-		ret = ptrace(PTRACE_SYSCALL, cfg->current_process->pid, NULL, sig);
-	if (ret < 0)
-		err(EXIT_FAILURE, "ptrace");
+	restart_process(cfg->current_process, group_stop, sig);
 }
 
 static void	process_killed(t_st_config *cfg, int status)
