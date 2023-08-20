@@ -2,8 +2,6 @@
 
 - cleanup the summary option (just simplify it a little bit, this is not too
   bad)
-- maybe add -w option, this would not be too hard, this would be an additional
-  bonus and it would be easier to show something with summary options
 - test the shit out of this ft\_strace (make sure every edge case is handled)
 - add doc and Dockerfile for sudo testing
 

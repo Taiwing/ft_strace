@@ -3,29 +3,33 @@
 #include <getopt.h>
 
 // ft_strace short options
-#define FT_ST_OPTS	"+cChp:"
+#define FT_ST_OPTS	"+cChkp:"
 
 const struct option		g_st_options[] = {
 	{	"summary-only",		no_argument,		NULL,	'c'	},
 	{	"summary",			no_argument,		NULL,	'C'	},
 	{	"help",				no_argument,		NULL,	'h'	},
+	{	"kernel-time",		no_argument,		NULL,	'k'	},
 	{	"attach",			required_argument,	NULL,	'p'	},
 	{	NULL,				0,					NULL,	0	},
 };
 
-const char				*g_st_arg_names[] = { NULL, NULL, NULL, "pid", NULL };
+const char				*g_st_arg_names[] = {
+	NULL, NULL, NULL, NULL, "pid", NULL,
+};
 
 const char				*g_st_help[] = {
 	"Report only a summary of time, call and error counts per syscall.",
 	"Like -c but also print regular output while processes are running.",
 	"Print this.",
+	"Use time spent in the kernel instead of wall-clock for summary options.",
 	"Attach to the process with the process ID 'pid' and begin tracing.",
 	NULL,
 };
 
 const char				*g_st_usage[] = {
-	"[-cCh] command [args]",
-	"[-cCh] -p pid [ command [args] ]",
+	"[-cChk] command [args]",
+	"[-cChk] -p pid [ command [args] ]",
 	NULL,
 };
 
@@ -67,6 +71,7 @@ char	**parse_options(t_st_config *cfg,  int argc, char **argv)
 		{
 			case 'c': cfg->hide_output = cfg->summary = 1;				break;
 			case 'C': cfg->hide_output = 0; cfg->summary = 1;			break;
+			case 'k': cfg->kernel_time = 1;								break;
 			case 'p': cfg->process_table_size =
 				parse_pid_list(cfg->process_table, optarg);				break;
 			default: usage(c != 'h');									break;
