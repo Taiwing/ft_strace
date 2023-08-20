@@ -25,32 +25,36 @@ static void	process_stopped(t_st_config *cfg, int status)
 
 	if (ST_SYSCALLSTOP(sig)) {
 		get_process_syscall(cfg->current_process);
-		print_syscall(cfg);
+		if (!cfg->hide_output)
+			print_syscall(cfg);
 		update_process_syscall(cfg->current_process);
 		sig = 0;
 	} else if (event) {
 		if (event == PTRACE_EVENT_STOP && ST_STOPSIG(sig))
 		{
 			group_stop = 1;
-			print_signal(cfg, sig, group_stop, NULL);
+			if (!cfg->hide_output)
+				print_signal(cfg, sig, group_stop, NULL);
 		} else {
 			sig = 0;
 		}
 	} else {
 		group_stop = (ptrace(PTRACE_GETSIGINFO, cfg->current_process->pid,
 			NULL, &siginfo) < 0);
-		print_signal(cfg, sig, group_stop, group_stop ? NULL : &siginfo);
+		if (!cfg->hide_output)
+			print_signal(cfg, sig, group_stop, group_stop ? NULL : &siginfo);
 	}
 	restart_process(cfg->current_process, group_stop, sig);
 }
 
 static void	process_killed(t_st_config *cfg, int status)
 {
-	if (cfg->current_process->in_syscall
+	if (!cfg->hide_output && cfg->current_process->in_syscall
 		&& !cfg->current_process->interrupted)
 		stprintf(NULL, " <unfinished ...>\n");
-	stprintf(cfg, "+++ killed by %s %s+++\n", signame(WTERMSIG(status)),
-		WCOREDUMP(status) ? "(core dumped) " : "");
+	if (!cfg->hide_output)
+		stprintf(cfg, "+++ killed by %s %s+++\n", signame(WTERMSIG(status)),
+			WCOREDUMP(status) ? "(core dumped) " : "");
 	cfg->current_process->running = 0;
 	--cfg->running_processes;
 	if (cfg->current_process == cfg->child_process)
@@ -61,10 +65,12 @@ static void	process_exited(t_st_config *cfg, int status)
 {
 	if (cfg->current_process->in_syscall)
 	{
-		print_syscall(cfg);
+		if (!cfg->hide_output)
+			print_syscall(cfg);
 		update_process_syscall(cfg->current_process);
 	}
-	stprintf(cfg, "+++ exited with %d +++\n", WEXITSTATUS(status));
+	if (!cfg->hide_output)
+		stprintf(cfg, "+++ exited with %d +++\n", WEXITSTATUS(status));
 	cfg->current_process->running = 0;
 	--cfg->running_processes;
 	if (cfg->current_process == cfg->child_process)
@@ -80,7 +86,8 @@ static void	set_current_process(t_st_config *cfg, pid_t pid)
 	else if (cfg->current_process && cfg->current_process != process
 		&& cfg->current_process->in_syscall)
 	{
-		stprintf(NULL, " <unfinished ...>\n");
+		if (!cfg->hide_output)
+			stprintf(NULL, " <unfinished ...>\n");
 		cfg->current_process->interrupted = 1;
 	}
 	cfg->current_process = process;
