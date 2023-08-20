@@ -46,6 +46,7 @@ typedef struct		s_st_process
 */
 typedef struct		s_st_summary
 {
+	int				syscall;				// syscall number
 	struct timespec	time;					// total time
 	size_t			calls;					// syscall count
 	size_t			errors;					// error count
@@ -103,8 +104,8 @@ extern const char	*g_erestart_desc[];
 */
 size_t			parse_pid_list(t_st_process *dest, char *pid_argument);
 char			**parse_options(t_st_config *cfg,  int argc, char **argv);
+void			terminate(void);
 void			set_signals(sigset_t *blocked);
-void			signal_exit(t_st_config *cfg);
 void			unblock_signals(void);
 void			block_signals(sigset_t *blocked);
 pid_t			st_waitpid(t_st_config *cfg, pid_t pid,
@@ -127,6 +128,8 @@ void			print_parameter(int comma, enum e_syscall_type type,
 					uint64_t param, uint64_t size, enum e_arch arch);
 void			print_restart_syscall(int syscall, enum e_arch arch);
 int				syscall_error_return(uint64_t value, enum e_arch arch);
+void			init_summary(t_st_config *cfg);
 void			count_syscall(t_st_config *cfg, t_st_process *process);
+void			print_summary(t_st_config *cfg);
 void			print_return_value(uint64_t value, enum e_syscall_type type,
 					enum e_arch arch);

@@ -67,7 +67,6 @@ static void	process_exited(t_st_config *cfg, int status)
 	{
 		if (!cfg->hide_output)
 			print_syscall(cfg);
-		update_process_syscall(cfg->current_process);
 	}
 	if (!cfg->hide_output)
 		stprintf(cfg, "+++ exited with %d +++\n", WEXITSTATUS(status));

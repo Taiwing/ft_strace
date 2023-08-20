@@ -32,6 +32,19 @@ static void	spawn_child_process(t_st_config *cfg, char **args)
 		warnx("'%s': command not found", *args);
 }
 
+void		terminate(void)
+{
+	if (g_cfg->summary)
+		print_summary(g_cfg);
+	if (g_cfg->exit_code > 0xff)
+	{
+		g_cfg->exit_code &= 0xff;
+		signal(g_cfg->exit_code, SIG_DFL);
+		raise(g_cfg->exit_code);
+		g_cfg->exit_code |= 0x80;
+	}
+}
+
 int			main(int argc, char **argv)
 {
 	t_st_config	cfg = {0};
@@ -50,8 +63,9 @@ int			main(int argc, char **argv)
 	if (!cfg.running_processes)
 		return (EXIT_FAILURE);
 	set_signals(&cfg.blocked);
+	if (cfg.summary)
+		init_summary(&cfg);
 	wait_processes(&cfg);
-	if (cfg.exit_code > 0xff)
-		signal_exit(&cfg);
+	terminate();
 	return (cfg.exit_code);
 }
