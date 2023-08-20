@@ -42,6 +42,16 @@ typedef struct		s_st_process
 }					t_st_process;
 
 /*
+** ft_strace summary structure
+*/
+typedef struct		s_st_summary
+{
+	struct timespec	time;					// total time
+	size_t			calls;					// syscall count
+	size_t			errors;					// error count
+}					t_st_summary;
+
+/*
 ** ft_strace global configuration
 */
 typedef struct		s_st_config
@@ -54,7 +64,10 @@ typedef struct		s_st_config
 	sig_atomic_t	running_processes;				// running processes count
 	t_st_process	*current_process;				// current event's process
 	t_st_process	*child_process;					// syscall process
+	int				arch_changed;					// architecture changed
 	int				exit_code;						// exit code
+	t_st_summary	summary_32[G_SYSCALL_X86_I386];	// 32 bit summary data
+	t_st_summary	summary_64[G_SYSCALL_X86_64];	// 64 bit summary data
 }					t_st_config;
 
 // global configuration
@@ -113,3 +126,5 @@ void			print_signal(t_st_config *cfg,
 void			print_parameter(int comma, enum e_syscall_type type,
 					uint64_t param, uint64_t size, enum e_arch arch);
 void			print_restart_syscall(int syscall, enum e_arch arch);
+int				syscall_error_return(uint64_t value, enum e_arch arch);
+void			count_syscall(t_st_config *cfg, t_st_process *process);
