@@ -1,4 +1,5 @@
 #include "ft_strace.h"
+#include <string.h>
 
 const char	*g_erestart_name[] = {
 	[ERESTARTSYS] = "ERESTARTSYS",
@@ -60,6 +61,41 @@ void	print_signal(t_st_config *cfg,
 	}
 	else
 		stprintf(cfg, "--- stopped by %s ---\n", signame(sig));
+}
+
+void	print_return_value(uint64_t value, enum e_syscall_type type,
+	enum e_arch arch)
+{
+	const char	*errname, *errdesc;
+	int64_t		svalue = arch == E_ARCH_32 ? (int32_t)value : (int64_t)value;
+
+	stprintf(NULL, ") = ");
+	if (type == TNONE || !syscall_error_return(value, arch))
+	{
+		print_parameter(0, type, value, 0, arch);
+		stprintf(NULL, "\n");
+		return ;
+	}
+	svalue = -svalue;
+	switch (svalue)
+	{
+		case ERESTARTSYS:
+		case ERESTARTNOINTR:
+		case ERESTARTNOHAND:
+		case ERESTART_RESTARTBLOCK:
+			errname = g_erestart_name[svalue];
+			errdesc = g_erestart_desc[svalue];
+			type = TNONE;
+			break ;
+		default:
+			errname = strerrorname_np(svalue);
+			errdesc = strerror(svalue);
+			type = TLINT;
+			svalue = -1;
+			break ;
+	}
+	print_parameter(0, type, svalue, 0, arch);
+	stprintf(NULL, " %s (%s)\n", errname, errdesc);
 }
 
 void	print_syscall(t_st_config *cfg)

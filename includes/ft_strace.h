@@ -128,3 +128,5 @@ void			print_parameter(int comma, enum e_syscall_type type,
 void			print_restart_syscall(int syscall, enum e_arch arch);
 int				syscall_error_return(uint64_t value, enum e_arch arch);
 void			count_syscall(t_st_config *cfg, t_st_process *process);
+void			print_return_value(uint64_t value, enum e_syscall_type type,
+					enum e_arch arch);

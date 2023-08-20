@@ -1,5 +1,4 @@
 #include "ft_strace.h"
-#include <string.h>
 
 static void	print_regset_32(t_st_config *cfg, t_user_regs_32 *regs)
 {
@@ -22,40 +21,6 @@ static void	print_regset_32(t_st_config *cfg, t_user_regs_32 *regs)
 	stprintf(NULL, " esp = %#x,", regs->esp);
 	stprintf(NULL, " xss = %#x ", regs->xss);
 	stprintf(NULL, "}\n");
-}
-
-static void	print_return_value_32(uint32_t value, enum e_syscall_type type)
-{
-	const char	*errname, *errdesc;
-	int32_t		svalue = (int32_t)value;
-
-	stprintf(NULL, ") = ");
-	if (type == TNONE || !syscall_error_return(value, E_ARCH_32))
-	{
-		print_parameter(0, type, value, 0, E_ARCH_32);
-		stprintf(NULL, "\n");
-		return ;
-	}
-	svalue = -svalue;
-	switch (svalue)
-	{
-		case ERESTARTSYS:
-		case ERESTARTNOINTR:
-		case ERESTARTNOHAND:
-		case ERESTART_RESTARTBLOCK:
-			errname = g_erestart_name[svalue];
-			errdesc = g_erestart_desc[svalue];
-			type = TNONE;
-			break ;
-		default:
-			errname = strerrorname_np(svalue);
-			errdesc = strerror(svalue);
-			type = TLINT;
-			svalue = -1;
-			break ;
-	}
-	print_parameter(0, type, svalue, 0, E_ARCH_32);
-	stprintf(NULL, " %s (%s)\n", errname, errdesc);
 }
 
 static void	print_syscall_exit_32(t_user_regs_32 *regs,
@@ -88,7 +53,7 @@ static void	print_syscall_exit_32(t_user_regs_32 *regs,
 			type = TPTR;
 		print_parameter(!!i, type, REGS_32_ARRAY(regs, i), size, E_ARCH_32);
 	}
-	print_return_value_32(regs->eax, syscall->return_type);
+	print_return_value(regs->eax, syscall->return_type, E_ARCH_32);
 }
 
 static void	print_syscall_entry_32(t_st_config *cfg, t_st_process *process,
