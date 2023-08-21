@@ -97,6 +97,23 @@ static void			print_separator(int *width)
 		sep, width[0], width[1], width[2], width[3], width[4], width[5]);
 }
 
+static void			print_summary_header(int *width)
+{
+	stprintf(NULL, "%*s %*s %*s %*s %*s %s\n",
+		width[0], g_summary_columns[0], width[1], g_summary_columns[1],
+		width[2], g_summary_columns[2], width[3], g_summary_columns[3],
+		width[4], g_summary_columns[4], g_summary_columns[5]);
+	print_separator(width);
+}
+
+static void			print_summary_total(int *width, t_summary_total *total)
+{
+	print_separator(width);
+	stprintf(NULL, "%*.2f %*.6f %*llu %*llu %*llu total\n",
+		width[0], total->time, width[1], total->seconds, width[2], total->usecs,
+		width[3], total->calls, width[4], total->errors);
+}
+
 static void			print_summary_table(t_st_summary *summary, size_t size,
 	const t_syscall *syscalls)
 {
@@ -107,11 +124,7 @@ static void			print_summary_table(t_st_summary *summary, size_t size,
 	memcpy(width, default_width, sizeof(width));
 	qsort(summary, size, sizeof(t_st_summary), compare_summary);
 	get_summary_data(width, &total, summary, size, syscalls);
-	stprintf(NULL, "%*s %*s %*s %*s %*s %s\n",
-		width[0], g_summary_columns[0], width[1], g_summary_columns[1],
-		width[2], g_summary_columns[2], width[3], g_summary_columns[3],
-		width[4], g_summary_columns[4], g_summary_columns[5]);
-	print_separator(width);
+	print_summary_header(width);
 	for (size_t i = 0; i < size && summary[i].calls; ++i)
 	{
 		if (total.seconds != 0.0)
@@ -128,10 +141,7 @@ static void			print_summary_table(t_st_summary *summary, size_t size,
 		else
 			stprintf(NULL, " unknown(%d)\n", summary[i].syscall);
 	}
-	print_separator(width);
-	stprintf(NULL, "%*.2f %*.6f %*llu %*llu %*llu total\n",
-		width[0], total.time, width[1], total.seconds, width[2], total.usecs,
-		width[3], total.calls, width[4], total.errors);
+	print_summary_total(width, &total);
 }
 
 void				print_summary(t_st_config *cfg)
