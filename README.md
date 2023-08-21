@@ -26,6 +26,10 @@ ft\_strace:
 ./ft_strace cat
 ```
 
+> This is program is made to be compiled and run on a linux x86\_64 system. It
+> has not been tested on any other architecture and is not expected to work
+> under any other one. However, it is still possible to trace 32bit processes.
+
 ## Usage
 
 ```
