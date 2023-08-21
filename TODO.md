@@ -1,6 +1,11 @@
 --- TODO ---
 
-- add doc and Dockerfile for sudo testing
+- Add a "How it works" section to the README, describe the program's general
+  inner workings. How it seizes the processes it wants to trace and how it
+  handles their syscalls, their parameters, their signals and their eventual
+  death. Talk a bit about the ptrace() and wait() functions. Before that, start
+  with a "What is a system call" section, and describe what they are and how
+  they are used and impelemented across different architectures.
 - check the test binaries again, and maybe change signal output a little bit
 - test the shit out of this ft\_strace (make sure every edge case is handled)
 
