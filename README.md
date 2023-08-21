@@ -223,10 +223,10 @@ interruption for legacy 32bit systems and the *syscall* instruction for x86\_64
 systems. The particular system called being used is designated by a unique
 syscall number that is passed in a particular register (*eax* for i386 and *rax*
 for x86\_64). It takes at most 6 parameters through six other registers. On
-different processor architectures different syscall numbers and registers will
-be used. Some might even have system calls that do not exist on an other one. Or
-they could also implement the same system call in different ways. A particularly
-egregious example of that is the _clone()_ system call. It has
+different processor architectures different syscall numbers and register sets
+will be used. Some might even have system calls that do not exist on an other
+one. Or they could also implement the same system call in different ways. A
+particularly egregious example of that is the _clone()_ system call. It has
 [four different definitions](https://github.com/torvalds/linux/blob/master/kernel/fork.c#L3022)
 including three that have five parameters in varying order and one with six
 parameters.
