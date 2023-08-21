@@ -233,4 +233,5 @@ parameters.
 
 Most of that is abstracted for the final user that should not have to worry
 about it. However it is important to keep in mind when dealing with different
-architectures in a low level setting.
+architectures in a low level setting. This one of the reason that ft\_strace
+only works on the x86\_64 architecture.
