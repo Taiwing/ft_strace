@@ -1,7 +1,7 @@
 --- TODO ---
 
-- test the shit out of this ft\_strace (make sure every edge case is handled)
 - add doc and Dockerfile for sudo testing
+- test the shit out of this ft\_strace (make sure every edge case is handled)
 
 -- find syscalls --
 
