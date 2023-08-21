@@ -3,7 +3,6 @@
 #include <sys/param.h>
 
 #define COL_COUNT 6
-#define STRLEN(s) (strlen(s))
 
 /*
 ** Summary column names

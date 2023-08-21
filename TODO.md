@@ -1,7 +1,5 @@
 --- TODO ---
 
-- cleanup the summary option (just simplify it a little bit, this is not too
-  bad)
 - test the shit out of this ft\_strace (make sure every edge case is handled)
 - add doc and Dockerfile for sudo testing
 
