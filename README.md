@@ -192,3 +192,31 @@ read(0, "", 131072) = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
 
 > As shown above, seizing a running process for tracing requires sudo rights.
 > Refer to the [Setup](#setup) section to run this program in a container.
+
+## How it works
+
+This program observes a running process and lists each
+[system call](https://en.wikipedia.org/wiki/System_call) with the
+[ptrace()](https://man7.org/linux/man-pages/man2/ptrace.2.html) function (which
+actually is a system call too). After having seized a process it will use the
+[wait4()](https://man7.org/linux/man-pages/man2/wait4.2.html) system call to
+wait for events.
+
+### What is a system call
+
+System calls are a userspace to kernel interface. They allow regular user
+processes to access system functionalities. The
+[Kernel](https://en.wikipedia.org/wiki/Linux_kernel) is a program that is always
+running. It acts as bridge between the OS and the hardware. Thus it handles
+everything memory-related, networking, etc... It also spawns and kills
+processes or sends signals for example.
+
+They include _open()_, _read()_, _write()_, or _fork()_ and _execve()_... The
+complete [list](https://x64.syscall.sh/) contains more than 300 different system
+calls. Most of them are accessible through glibc wrapper functions that somewhat
+abstract the interface for compatibility between architectures. Some of them do
+not have corresponding wrappers and have to be called with the
+[syscall()](https://man7.org/linux/man-pages/man2/syscall.2.html) function.
+
+TODO: add bit about interface differences between architecture (mmap is a
+particulary egregious example of that) and how it is to be handled by the user
