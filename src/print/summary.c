@@ -63,8 +63,6 @@ static void			get_summary_data(int *width, t_summary_total *total,
 		summary[i].time = ts_to_second(&summary[i].total);
 		summary[i].avgtime =
 			(uint64_t)ts_to_usec(&summary[i].total) / summary[i].calls;
-		width[3] = MAX(width[3], intlen(summary[i].calls));
-		width[4] = MAX(width[4], intlen(summary[i].errors));
 		if (syscalls[summary[i].syscall].name)
 			name = syscalls[summary[i].syscall].name;
 		else
@@ -73,12 +71,20 @@ static void			get_summary_data(int *width, t_summary_total *total,
 			snprintf(bufname, sizeof(bufname),
 				"unknown(%d)", summary[i].syscall);
 		}
+		width[1] = MAX(width[1], intlen((uint64_t)summary[i].time) + 7);
+		width[2] = MAX(width[2], intlen(summary[i].avgtime));
+		width[3] = MAX(width[3], intlen(summary[i].calls));
+		width[4] = MAX(width[4], intlen(summary[i].errors));
 		width[5] = MAX(width[5], strlen(name) + 1);
 		total->seconds += summary[i].time;
 		total->calls += summary[i].calls;
 		total->errors += summary[i].errors;
 	}
 	total->usecs = (uint64_t)(total->seconds * USEC_PER_SEC) / total->calls;
+	width[1] = MAX(width[1], intlen((uint64_t)total->seconds) + 7);
+	width[2] = MAX(width[2], intlen(total->usecs));
+	width[3] = MAX(width[3], intlen(total->calls));
+	width[4] = MAX(width[4], intlen(total->errors));
 }
 
 static void			print_separator(int *width)
