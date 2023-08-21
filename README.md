@@ -143,3 +143,52 @@ Contrary to the original strace, this program uses wall-clock time by default
 (meaning the real time as per the system clock visible to the user). To use the
 same clock as the original, ther kernel clock, pass -k with one of the summary
 options.
+
+## Description
+
+The command argument can be any valid program followed by its own arguments.
+ft\_strace can be given an absolute path to an executable file or it will search
+the binary location with the PATH environment variable. ft\_strace own options
+must absolutely be given before the command, otherwise it will pas them to the
+executed command.
+
+If no command is given ft\_strace expects the --attach (-p) option with a list
+of comma or space separated pids. Typically this can be used with the output of
+the *pidof* command:
+
+```shell
+# run some cat commands
+cat & cat
+# attach ft\_strace to them in an other shell
+sudo ./ft\_strace -p "$(pidof cat)"
+```
+
+ft\_strace will then proceed to trace every running instance of the *cat*
+command. Each output line will be preceeded with the pid of the process it
+refers to until only one process remains:
+
+```
+ft_strace: Process 69169 attached
+ft_strace: Process 69168 attached
+[pid 69168] --- stopped by SIGTTIN ---
+[pid 69169] read(0, "toto\n", 131072) = 5
+[pid 69169] write(1, "toto\n", 5) = 5
+[pid 69169] read(0, "", 131072) = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+[pid 69169] --- SIGTSTP {si_signo=SIGTSTP, si_code=SI_KERNEL} ---
+[pid 69169] --- stopped by SIGTSTP ---
+[pid 69169] --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=52291, si_uid=1000} ---
+[pid 69169] read(0, "", 131072) = 0
+[pid 69169] munmap(0x7f0394349000, 139264) = 0
+[pid 69169] close(0) = 0
+[pid 69169] close(1) = 0
+[pid 69169] close(2) = 0
+[pid 69169] exit_group(0) = ?
+[pid 69169] +++ exited with 0 +++
+--- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=52291, si_uid=1000} ---
+read(0, "", 131072) = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+--- SIGINT {si_signo=SIGINT, si_code=SI_KERNEL} ---
++++ killed by SIGINT +++
+```
+
+> As shown above, seizing a running process for tracing requires sudo rights.
+> Refer to the [Setup](#setup) section to run this program in a container.
