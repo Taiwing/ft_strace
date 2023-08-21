@@ -235,3 +235,28 @@ Most of that is abstracted for the final user that should not have to worry
 about it. However it is important to keep in mind when dealing with different
 architectures in a low level setting. This one of the reason that ft\_strace
 only works on the x86\_64 architecture.
+
+### How to catch a system call ?
+
+With _ptrace()_. But first you have to *seize* the running process you want to
+observe. For that one simply has to use the *PTRACE_SEIZE* request on the pid of
+the chosen process:
+
+```C
+ptrace(PTRACE_SEIZE, pid, NULL, NULL);
+```
+
+Then if the process has appropriate rights, or if the pid corresponds to a child
+process, the target process will be traced. If the tracee is not already stopped
+it will have to be done with an other *ptrace()* request (*PTRACE_INTERRUPT*).
+Then the process can be restarted using this request:
+
+```C
+ptrace(PTRACE_SYSCALL, pid, NULL, NULL);
+```
+
+It will both restart the process and make it stop on the next syscall entry.
+From there ft\_strace simply waits for events with the _wait4()_ function. Every
+system call entry and exit of the tracee will be reported back to ft\_strace, as
+well as the signals it receives and eventually its death (be it by _exit()_ or
+by a signal).
