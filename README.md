@@ -95,3 +95,47 @@ munmap(0x7fed9ddeb000, 151155) = 0
 exit_group(0) = ?
 +++ exited with 0 +++
 ```
+
+By default ft\_strace will print each syscall and their parameter until the
+tracee is killed or exits. It will also show the return value and an eventual
+error if the syscall failed. If you just want a list of the syscalls without all
+the detail you can run this program with the summary option:
+
+```shell
+./ft_strace -c ls
+```
+
+possible output:
+
+```
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 40.94    0.000416         416         1           execve
+ 12.52    0.000127          63         2         1 arch_prctl
+ 10.62    0.000108          36         3           brk
+  9.41    0.000096           7        13           mmap
+  3.97    0.000040           5         7           close
+  3.61    0.000037           7         5           openat
+  3.36    0.000034           5         6           newfstatat
+  3.00    0.000031          15         2           getdents64
+  2.33    0.000024          23         1           write
+  2.30    0.000023           5         4           mprotect
+  1.90    0.000019           3         6         4 prctl
+  0.90    0.000009           9         1           munmap
+  0.87    0.000009           8         1         1 access
+  0.80    0.000008           8         1         1 ioctl
+  0.75    0.000008           7         1           getrandom
+  0.75    0.000008           3         2           read
+  0.68    0.000007           3         2           pread64
+  0.34    0.000003           3         1           prlimit64
+  0.32    0.000003           3         1           set_robust_list
+  0.32    0.000003           3         1           rseq
+  0.32    0.000003           3         1           set_tid_address
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.001017          16        62         7 total
+```
+
+Contrary to the original strace, this program uses wall-clock time by default
+(meaning the real time as per the system clock visible to the user). To use the
+same clock as the original, ther kernel clock, pass -k with one of the summary
+options.
