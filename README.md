@@ -159,8 +159,8 @@ the *pidof* command:
 ```shell
 # run some cat commands
 cat & cat
-# attach ft\_strace to them in an other shell
-sudo ./ft\_strace -p "$(pidof cat)"
+# attach ft_strace to them in an other shell
+sudo ./ft_strace -p "$(pidof cat)"
 ```
 
 ft\_strace will then proceed to trace every running instance of the *cat*
