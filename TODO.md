@@ -1,6 +1,7 @@
 --- TODO ---
 
 - add doc and Dockerfile for sudo testing
+- check the test binaries again, and maybe change signal output a little bit
 - test the shit out of this ft\_strace (make sure every edge case is handled)
 
 -- find syscalls --
