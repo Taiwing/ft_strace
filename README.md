@@ -218,5 +218,19 @@ abstract the interface for compatibility between architectures. Some of them do
 not have corresponding wrappers and have to be called with the
 [syscall()](https://man7.org/linux/man-pages/man2/syscall.2.html) function.
 
-TODO: add bit about interface differences between architecture (mmap is a
-particulary egregious example of that) and how it is to be handled by the user
+In its most basic form a linux system call is an assembly instruction, an
+interruption for legacy 32bit systems and the *syscall* instruction for x86\_64
+systems. The particular system called being used is designated by a unique
+syscall number that is passed in a particular register (*eax* for i386 and *rax*
+for x86\_64). It takes at most 6 parameters through six other registers. On
+different processor architectures different syscall numbers and registers will
+be used. Some might even have system calls that do not exist on an other one. Or
+they could also implement the same system call in an other way. A particularly
+egregious example of that is the _clone()_ system call. It has
+[four different definitions](https://github.com/torvalds/linux/blob/master/kernel/fork.c#L3022)
+including three that have 5 parameters in varying order and one with 6
+parameters.
+
+Most of that is abstracted for the final user that should not have to worry
+about it. However it is important to keep in mind when dealing with different
+architectures in a low level setting.
