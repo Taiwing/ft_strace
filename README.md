@@ -260,3 +260,16 @@ From there ft\_strace simply waits for events with the _wait4()_ function. Every
 system call entry and exit of the tracee will be reported back to ft\_strace, as
 well as the signals it receives and eventually its death (be it by _exit()_ or
 by a signal).
+
+To get the details of a syscall, which one has been called, its parameters and
+eventually its return value, the registers of the tracee must be inspected. This
+is done with yet an other _ptrace()_ request:
+
+```C
+ptrace(PTRACE_GETREGSET, pid, NT_PRSTATUS, &registers);
+```
+
+This copies the regular register values (as specified by *NT_PRSTATUS*) of the
+process identified by *pid* in the *registers* structure. Then the tracer
+process has to interpret the register structure depending on the architecture
+to extract the syscall information.
