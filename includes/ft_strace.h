@@ -114,6 +114,21 @@ extern const char	*g_erestart_desc[];
 extern const struct timespec	g_ts_zero;
 
 /*
+** si_code_name
+*/
+typedef struct	s_si_code_names
+{
+	const int	*si_codes;
+	const char	**names;
+	size_t		count;
+}				t_si_code_names;
+
+// si_code names by signal
+//#define SI_CODE_NAMES_SIZE (SIGSYS + 1)
+#define SI_CODE_NAMES_SIZE (SIGPOLL + 1)
+extern const t_si_code_names	g_si_code_names[SI_CODE_NAMES_SIZE];
+
+/*
 ** functions
 */
 size_t			parse_pid_list(t_st_process *dest, char *pid_argument);
